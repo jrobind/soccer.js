@@ -13,11 +13,10 @@ var cache = {
 }
 
 
-/*HELPER FUNCTIONS*/
+/*------HELPER FUNCTIONS------*/
 
 
 function updateCache(team) {
-
     cache.team = team;
     cache.points = team.points;
     cache.goalDiff = team.goalDiff;
@@ -25,7 +24,6 @@ function updateCache(team) {
 }
 
 function goalDifferenceCheck(team) {
-    
     if (team.goalDiff > cache.goalDiff) {
         updateCache(team);
     } else if (team.goalDiff === cache.goalDiff) {
@@ -35,22 +33,62 @@ function goalDifferenceCheck(team) {
 }
 
 function goalsScoredCheck(team) {
-    
     if (team.goalsScored > cache.goalsScored) {
+        updateCache(team);
+    } else if (team.goalsScored === cache.goalsScored) {
+        // sort the teams alphabetically - extreme edge case during the season but useful for the start when no games have been played
+        sortAlphabetically(team, cache.team);
+    } 
+}
+
+function sortAlphabetically(team, cacheTeam) {
+    if (team.name.toLowerCase() < cacheTeam.name.toLowerCase()) {
         updateCache(team);
     }
 }
 
 function cacheReset() {
-
     cache.team = null;
     cache.points = 0;
     cache.goalDiff = 0;
     cache.goalsScored = 0;
 }
 
+function sortWithZeroPoints(zeroTeams) {
+    
+    // push all team names to temp array then sort
+    var sortedZeroTeams = zeroTeams.map(function(team) {
+        return team.name.toLowerCase();
+    }).sort();
+    
+    // now sort the team objects
+    sortedZeroTeams.forEach(function(teamName, index) {
+        zeroTeams.forEach(function(team) {
+            if (teamName === team.name.toLowerCase()) {
+                sortedZeroTeams[index] = team;
+            }
+        });
+    });
+    
+    // remove sorted zero point teams from tempLeague array
+    sortedZeroTeams.forEach(function(zeroTeam) {
+        league.tempLeague.forEach(function(team, index) {
+            if (zeroTeam.name === team.name) {
+                league.tempLeague.splice(index, 1);
+            }
+        });
+    });
+    
+    // sort the remaining tempLeague teams as normal
+    sort();
+    
+    // concat both the sorted zero points teams and the sorted teams with points
+    league.sortedLeague = league.sortedLeague.concat(sortedZeroTeams);
+    console.log(league.sortedLeague);
+}
 
-/*API FUNCTIONS*/
+
+/*------API FUNCTIONS------*/
 
 
 function addTeam(team, position) {
@@ -73,9 +111,16 @@ function addTeam(team, position) {
 }
 
 function sort() {
-    
     var sorted = league.sortedLeague;
     var temp = league.tempLeague;
+    var zeroTeams = temp.filter(function(team) {
+        return !team.points;
+    })
+    
+    if (zeroTeams.length) {
+        sortWithZeroPoints(zeroTeams);
+        return;
+    }
     
     // base case
     if (temp.length === 0) {
@@ -134,7 +179,6 @@ function updateTeam(name, data) {
 }
 
 function deleteTeam(name) {
-    
     var deleteIndex;
     
     league.sortedLeague.forEach(function(sortedTeam, index) {
