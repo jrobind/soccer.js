@@ -1,7 +1,7 @@
 var league = {
     tempLeague: [],
     sortedLeague: [],
-    manualLeague: []
+    positionedManually: false
 };
 
 // used for sorting comparisons
@@ -13,7 +13,7 @@ var cache = {
 }
 
 
-/*------HELPER FUNCTIONS------*/
+/*-------------HELPER FUNCTIONS------------*/
 
 
 function updateCache(team) {
@@ -70,7 +70,6 @@ function addPositions(sorted) {
 
 
 function sortWithZeroPoints(zeroTeams) {
-    
     // push all team names to temp array then sort
     var sortedZeroTeams = zeroTeams.map(function(team) {
         return team.name.toLowerCase();
@@ -105,14 +104,15 @@ function sortWithZeroPoints(zeroTeams) {
 
 function positionManually(team, position) {
     // format position in relation to array indexing
-    var pos = position -1;
+    var arrPos = position -1;
     // add position property to the team 
-    team['position'] = pos;
+    team['position'] = position;
     
     // add to tempArray but sort by manual position given
-    league.manualLeague[pos] = team;
+    league.sortedLeague[arrPos] = team;
+    league.positionedManually = true;
     
-    console.log(league.manualLeague);
+    console.log(league.sortedLeague);
 }
 
 
@@ -184,7 +184,11 @@ function createTableFooter(leagueTable) {
     footer.appendChild(footerRow);
     // create standard cell for footer row
     var footerCell = document.createElement('td');
+    
+    // add colspan attribute to ensure footer cell stretches entire table
+    footerCell.setAttribute('colspan', '10');
     footerRow.appendChild(footerCell);
+    
     // create span for footer row cell
     var footerTime = document.createElement('time');
     
@@ -197,7 +201,7 @@ function createTableFooter(leagueTable) {
 }
 
 
-/*------API FUNCTIONS------*/
+/*------------API FUNCTIONS------------*/
 
 
 function createLeague(leagueName) {    
@@ -262,7 +266,7 @@ function sort() {
     });
     
     // check for teams with postiion set manually
-    if (league.manualLeague.length) {
+    if (league.positionedManually) {
         throw new Error('Sort function can only be called when teams have not had their positions manually set.');
     }
     
@@ -276,9 +280,7 @@ function sort() {
         return;
     // recursive case
     } else {
-
         for (var i = 0; i < temp.length; i ++) {
-            
             if (temp[i].points > cache.points) {
                 // update the cache with team data
                 updateCache(temp[i]);  
@@ -305,7 +307,6 @@ function sort() {
         
         // add positions to teams
         addPositions(league.sortedLeague);
-        
         console.log(league);   
     }
 }
