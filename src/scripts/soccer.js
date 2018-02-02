@@ -67,6 +67,16 @@ function addPositions(sorted) {
 }
 
 
+function manualPositionCheck() {
+    // check for position properties already set on the teams
+    if (league.positionedManually) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 function sortWithZeroPoints(zeroTeams) {
     // push all team names to temp array then sort
     var sortedZeroTeams = zeroTeams.map(function(team) {
@@ -271,18 +281,20 @@ function addLastupdated(date) {
 }
 
 
-function sort(reSort) {
+function sort(internalSort) {
     var sorted = league.sortedLeague;
     var temp = league.tempLeague;
     var zeroTeams = temp.filter(function(team) {
         return !team.points;
     });
     
-    // check for teams with postiion set manually !!!! REDO THIS
-//     throw new Error('Sort function can only be called when teams have not had their positions manually set.');
+    // check for teams with postiion set manually
+    if (manualPositionCheck()) {
+        throw new Error('Teams that have been positioned manually cannot be sorted.')   
+    }
     
-    
-    if (reSort) {
+    // if sort() is called internally we need to update our arrays
+    if (internalSort) {
         // push all teams from sorted to temp array and empty the sorted array
         sorted.forEach(function(team) {
             temp.push(team)
@@ -290,6 +302,7 @@ function sort(reSort) {
         sorted.length = 0;
     }
     
+    // teams with 0 points represents an edge case so we check here
     if (zeroTeams.length) {
         sortWithZeroPoints(zeroTeams);
         return;
@@ -378,11 +391,18 @@ function updateTeam(name, data) {
         });
     });
     
-    // re-sort the table
-    sort(true);
     
-    // re-render the table to show updates
-    createLeague(league.leagueName, league.colLength);
+//    internalSortCheck(); !!!!!!!
+    
+    // re-sort the table
+    if (league.positionedManually) {
+        // re-render the table to show updates
+        createLeague(league.leagueName, league.colLength);    
+    } else {
+        sort(true);
+        createLeague(league.leagueName, league.colLength);
+    }
+
 }
 
 
