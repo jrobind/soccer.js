@@ -1,7 +1,8 @@
 var league = {
     tempLeague: [],
     sortedLeague: [],
-    positionedManually: false
+    positionedManually: false,
+    tableData: {}
 };
 
 // used for sorting comparisons
@@ -16,20 +17,15 @@ var cache = {
 /*-------------HELPER FUNCTIONS------------*/
 
 
-function sort(internalSort) {
+function sort(re_sort) {
     var sorted = league.sortedLeague;
     var temp = league.tempLeague;
     var zeroTeams = temp.filter(function(team) {
         return !team.points;
     });
     
-    // check for teams with postiion set manually
-    if (manualPositionCheck()) {
-        throw new Error('Teams that have been positioned manually cannot be sorted.')   
-    }
-    
-    // if sort() is called internally we need to update our arrays
-    if (internalSort) {
+    // if re_sort is true we need to re-sort the table
+    if (re_sort) {
         // push all teams from sorted to temp array and empty the sorted array
         sorted.forEach(function(team) {
             temp.push(team)
@@ -142,24 +138,14 @@ function addPositions(sorted) {
 }
 
 
-function manualPositionCheck() {
-    // check for position properties already set on the teams
-    if (league.positionedManually) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
 function internalSortAndRender() {
     // re-sort the table
     if (league.positionedManually) {
-        createLeague(league.leagueName, league.colLength);    
+        createLeague(league.tableData);    
     } else {
         sort(true);
         // re-render the table to show sorted updates
-        createLeague(league.leagueName, league.colLength);
+        createLeague(league.tableData);
     }
 }
 
@@ -193,20 +179,6 @@ function sortWithZeroPoints(zeroTeams) {
     
     // concat both the sorted zero points teams and the sorted teams with points
     league.sortedLeague = league.sortedLeague.concat(sortedZeroTeams);
-}
-
-
-function positionManually(team, position) {
-    // format position in relation to array indexing
-    var arrPos = position -1;
-    // add position property to the team 
-    team['position'] = position;
-    
-    // add to tempArray but sort by manual position given
-    league.sortedLeague[arrPos] = team;
-    league.positionedManually = true;
-    // re-render the table
-    internalSortAndRender();
 }
 
 
@@ -322,9 +294,10 @@ function createLeague(data) {
         }
     });
     
-    // store league name and column length
-    league['leagueName'] = data.leagueName;
-    league['colLength'] = data.colTitle;
+    // store table data
+    league.tableData['leagueName'] = data.leagueName;
+    league.tableData['colTitle'] = data.colTitle;
+    league.tableData['footer'] = data.footer;
     
     // set caption text
     leagueCaption.innerText = data.leagueName;
@@ -342,17 +315,17 @@ function createLeague(data) {
 }
 
 
-function addTeam(team, position) {
+function addTeam(team) {
     var sorted = league.sortedLeague;
     var temp = league.tempLeague;
     
-    // logic for manual positioning
-    if (arguments.length > 1) {
-        // team to be positioned manually
-        positionManually(team, position);
-        return;
+    // check if table has been rendered - if so, we add team and sort if possible
+    if (document.querySelector('#leagueTable table')) {
+        temp.push(team);
+        internalSortAndRender();
     }
     
+    // push team to temporary array for sorting
     temp.push(team);
     console.log(league.tempLeague);
     
@@ -361,6 +334,34 @@ function addTeam(team, position) {
         league.tempLeague = league.tempLeague.concat(sorted);
         league.sortedLeague.length = 0;
     }
+}
+
+function positionOverride(positions) {
+    var sorted = league.sortedLeague;
+    league.positionedManually = true;
+    
+    var pos1 = positions[0] -1; 
+    var pos2 = positions[1] -1; 
+    
+    // swap team positions
+    var tempArr = new Array(sorted.length);
+    for (var i = 0; i < sorted.length; i ++) {
+        if (i === pos1) {
+            tempArr[pos2] = sorted[i];
+            // change the teams position property
+            sorted[i].position = positions[1];
+        } else if (i === pos2) {
+            tempArr[pos1] = sorted[i];  
+            // change the teams position property
+            sorted[i].position = positions[0];
+        } else {
+            tempArr[i] = sorted[i];
+        }
+    }
+    
+    league.sortedLeague = tempArr;
+    // re-render the table
+    internalSortAndRender();
 }
 
 
@@ -560,11 +561,11 @@ function mockData() {
         goalDiff: 5,
         points: 17
     })
-    
-    sort()
-    
-    addLastupdated(new Date())
-    
-    createLeague('MOCK LEAGUE', 'short');
+        
+    createLeague({
+        leagueName: 'MOCK LEAGUE',
+        colTitle: 'short',
+        footer: true
+    });
     
 }
