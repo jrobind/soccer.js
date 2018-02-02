@@ -59,6 +59,16 @@ function cacheReset() {
 }
 
 
+function addPositions(sorted) {
+    // add league position to each team object
+    sorted.forEach(function(team, index) {
+       team['position'] = index + 1;
+    });
+    
+    console.log(sorted);
+}
+
+
 function sortWithZeroPoints(zeroTeams) {
     
     // push all team names to temp array then sort
@@ -105,9 +115,10 @@ function positionManually(team, position) {
     console.log(league.manualLeague);
 }
 
+
 function createTableHead(tableEl) {
     // cell data for header
-    var headData = ['Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
+    var headData = ['#', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
     // append table head to table
     var tableHead = document.createElement('thead');
     tableEl.appendChild(tableHead);
@@ -130,19 +141,66 @@ function createTableHead(tableEl) {
     createTableData(tableEl);
 }
 
+
 function createTableData(tableEl) {
+    var sorted = league.sortedLeague;
+    
     // create table body and append to table
     var tableBody = document.createElement('tbody');
+    tableEl.appendChild(tableBody);
     
+    // iterate over each team object create a table row with relevant team data 
+    sorted.forEach(function(team) {
+        var teamRow = document.createElement('tr');
+        tableBody.appendChild(teamRow);
+        
+        var dataArr = [];
+        for (var prop in team) {
+            dataArr.push(team[prop]);
+        }
+        // place team position at front of team data array
+        var teamPos = dataArr[9];
+        dataArr.splice(9, 1);
+        dataArr.unshift(teamPos);
+        
+        // iterate over team data array and create standard table cells for team data and append to team row
+        dataArr.forEach(function(teamData) {
+            var standardCell = document.createElement('td');
+            var dataSpan = document.createElement('span');
+            // add team data to span
+            dataSpan.innerText = teamData;
+            // append data span to standard cell and append cell to team row
+            standardCell.appendChild(dataSpan);
+            teamRow.appendChild(standardCell);
+        });
+    });
+}
+
+function createTableFooter(leagueTable) {
+    var footer = document.createElement('tfoot');
+    leagueTable.appendChild(footer);
+    // create footer row
+    var footerRow = document.createElement('tr');
+    footer.appendChild(footerRow);
+    // create standard cell for footer row
+    var footerCell = document.createElement('td');
+    footerRow.appendChild(footerCell);
+    // create span for footer row cell
+    var footerTime = document.createElement('time');
+    
+    // add most recent last updated time if we have it
+    if (league.lastUpdated) {
+        footerTime.innerText = league.lastUpdated;
+    }
+    // append span to footer cell
+    footerCell.appendChild(footerTime);
 }
 
 
 /*------API FUNCTIONS------*/
 
-function createLeague(leagueName) {
-    var manual = league.manualLeague;
-    var sorted = league.sortedLeague;
-    
+
+function createLeague(leagueName) {    
     // find table container id and append table element and table caption
     var container = document.querySelector('#leagueTable');
     
@@ -156,6 +214,8 @@ function createLeague(leagueName) {
     
     // create the tablehead
     createTableHead(leagueTable);
+    // create the tableFooter
+    createTableFooter(leagueTable);
 }
 
 
@@ -178,6 +238,19 @@ function addTeam(team, position) {
     }
     
     console.log(league);
+}
+
+
+function addLastupdated(date) {
+    // format the date
+    var dString = date.toGMTString();
+    // remove 'GMT' from end of date
+    var sliceGmt = dString.slice(0, 25);
+    
+    // set new date onto the league object
+    league['lastUpdated'] = 'Last updated ' + sliceGmt;
+    
+    console.log(sliceGmt);
 }
 
 
@@ -229,6 +302,9 @@ function sort() {
 
         // recurse until all teams are checked
         sort();
+        
+        // add positions to teams
+        addPositions(league.sortedLeague);
         
         console.log(league);   
     }
