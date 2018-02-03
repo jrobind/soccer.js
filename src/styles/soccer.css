@@ -1,7 +1,42 @@
 #leagueTable table {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#leagueTable table {
     border-collapse: collapse;
 }
 
 .zone {
+    border-bottom: 1.6px solid rgba(0, 0, 0, 0.6);
+}
+
+#leagueTable thead th {
+    background-color: #f4f4f4;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
+}
+
+#leagueTable table td, #leagueTable table th {
+    padding: 5px 6px;
+    
+}
+
+#leagueTable tfoot  td{
+    padding-top: 10px;
+    font-size: 0.75em;
+    border: none;
+}
+
+#leagueTable td {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
+}
+
+#leagueTable caption {
+    background: #cb2d3e;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #ef473a, #cb2d3e);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #ef473a, #cb2d3e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: #fff;
+    padding: 10px;
+    letter-spacing: 1px;
+    font-size: 1.1em;
+
 }
