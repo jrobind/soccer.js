@@ -1,124 +1,61 @@
 var league = {
-    tempLeague: [],
     sortedLeague: [],
     positionedManually: false,
+    reversed: false,
     tableData: {}
 };
 
-// used for sorting comparisons
-var cache = {
-    team: null,
-    points: 0,
-    goalDiff: 0,
-    goalsScored: 0
-}
+
+/*-------------UTILITY FUNCTIONS------------*/
 
 
-/*-------------HELPER FUNCTIONS------------*/
-
-
-function sort(re_sort) {
-    var sorted = league.sortedLeague;
-    var temp = league.tempLeague;
-    var zeroTeams = temp.filter(function(team) {
-        return !team.points;
+function sort() {
+    league.sortedLeague.sort(function(a, b) {
+        // sort teams in descending order (by default) by points
+        if (a.points !== b.points) {
+            return b.points - a.points;
+        } else {
+            // if points are equal then sort by goal difference
+            return goalDiffCheck(a, b);
+        }
     });
     
-    // if re_sort is true we need to re-sort the table
-    if (re_sort) {
-        // push all teams from sorted to temp array and empty the sorted array
-        sorted.forEach(function(team) {
-            temp.push(team)
-        });
-        sorted.length = 0;
-    }
+    // add positions to teams
+    addPositions(league.sortedLeague);
     
-    // teams with 0 points represents an edge case so we check here
-    if (zeroTeams.length) {
-        sortWithZeroPoints(zeroTeams);
-        return;
+    // check if we need to reverse the sorted league
+    if (league.reversed) {
+        league.sortedLeague.reverse();
     }
-    
-    // base case
-    if (temp.length === 0) {
-        return;
-    // recursive case
+}
+
+
+function goalDiffCheck(a, b) {
+    if (a.goalDiff !== b.goalDiff) {
+        return b.goalDiff - a.goalDiff;
     } else {
-        for (var i = 0; i < temp.length; i ++) {
-            if (temp[i].points > cache.points) {
-                // update the cache with team data
-                updateCache(temp[i]);  
-            } else if (temp[i].points === cache.points) {
-                // check goal difference
-                goalDifferenceCheck(temp[i]);
-            }
-        }
-        
-        // match the right team(s) and push to sorted league
-        temp.forEach(function(team, index) {
-            if (team.name === cache.team.name) {
-                sorted.push(team);
-                // remove team 
-                temp.splice(index, 1);
-            }
-        });
-        
-        // reset cache
-        cacheReset();
-
-        // recurse until all teams are checked
-        sort();
-        
-        // add positions to teams
-        addPositions(league.sortedLeague);
+        // if goal difference is equal then sort by total goals scored
+        return goalsScoredCheck(a, b);
     }
 }
 
 
-function updateCache(team) {
-    cache.team = team;
-    cache.points = team.points;
-    cache.goalDiff = team.goalDiff;
-    cache.goalsScored = team.goalsScored;
-}
-
-
-function goalDifferenceCheck(team) {
-    if (team.goalDiff > cache.goalDiff) {
-        updateCache(team);
-    } else if (team.goalDiff === cache.goalDiff) {
-        // unlikely edge case - but still possible so check the goals scored
-        goalsScoredCheck(team);
+function goalsScoredCheck(a, b) {
+    if (a.goalsScored !== b.goalsScored) {
+        return b.goalsScored - a.goalsScored;
+    } else {
+        // if total goals scored is equal then sort alphabetically
+        return alphabeticalCheck(a, b);
     }
 }
 
 
-function goalsScoredCheck(team) {
-    if (team.goalsScored > cache.goalsScored) {
-        updateCache(team);
-    } else if (team.goalsScored === cache.goalsScored) {
-        // sort the teams alphabetically - extreme edge case during the season but useful for the start when no games have been played
-        sortAlphabetically(team, cache.team);
-    } 
+function alphabeticalCheck(a, b) {
+    return b.name < a.name;
 }
 
 
-function sortAlphabetically(team, cacheTeam) {
-    if (team.name.toLowerCase() < cacheTeam.name.toLowerCase()) {
-        updateCache(team);
-    }
-}
-
-
-function cacheReset() {
-    cache.team = null;
-    cache.points = 0;
-    cache.goalDiff = 0;
-    cache.goalsScored = 0;
-}
-
-
-function lastupdated() {
+function lastUpdated() {
     var date = new Date();
     // format the date
     var dString = date.toGMTString();
@@ -138,55 +75,56 @@ function addPositions(sorted) {
 }
 
 
+function reverseSetup() {
+    var reverseArrow = document.querySelector('#reverseTable');
+    reverseArrow.addEventListener('click', reverseTable);
+}
+
+
+function reverseTable() {
+    // set reverse to true
+    league.reversed = true;
+    // set back to false if league is already reversed
+    if (league.sortedLeague[0].points < league.sortedLeague[1].points) {
+        league.reversed = false;
+    }
+    // revere the league table order
+    league.sortedLeague.reverse();
+    // re-render
+    internalSortAndRender();
+}
+
+
 function internalSortAndRender() {
     // re-sort the table
     if (league.positionedManually) {
         createLeague(league.tableData);    
     } else {
-        sort(true);
-        // re-render the table to show sorted updates
+        sort();
+        // re-render the table to show sorted with team updates
         createLeague(league.tableData);
     }
 }
 
 
-function sortWithZeroPoints(zeroTeams) {
-    // push all team names to temp array then sort
-    var sortedZeroTeams = zeroTeams.map(function(team) {
-        return team.name.toLowerCase();
-    }).sort();
+function removeLeague() {
+    var container = document.querySelector('#leagueTable');
     
-    // now sort the team objects
-    sortedZeroTeams.forEach(function(teamName, index) {
-        zeroTeams.forEach(function(team) {
-            if (teamName === team.name.toLowerCase()) {
-                sortedZeroTeams[index] = team;
-            }
-        });
+    var containerChildNodes = [].slice.apply(container.childNodes);
+    containerChildNodes.forEach(function(node) {
+        if (node.nodeName === 'TABLE') {
+            // remove the table element
+            node.parentNode.removeChild(node);
+        }
     });
-    
-    // remove sorted zero point teams from tempLeague array
-    sortedZeroTeams.forEach(function(zeroTeam) {
-        league.tempLeague.forEach(function(team, index) {
-            if (zeroTeam.name === team.name) {
-                league.tempLeague.splice(index, 1);
-            }
-        });
-    });
-    
-    // sort the remaining tempLeague teams as normal
-    sort();
-    
-    // concat both the sorted zero points teams and the sorted teams with points
-    league.sortedLeague = league.sortedLeague.concat(sortedZeroTeams);
 }
 
 
 function createTableHead(tableEl, headLength) {
     var headData;
     // cell data for header
-    var headDataAbbr = ['#', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
-    var headDataLng = ['#', 'Team', 'Played', 'Won', 'Drawn', 'Lost', 'For', 'Against', 'GD', 'Points'];
+    var headDataAbbr = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
+    var headDataLng = ['Pos', 'Team', 'Played', 'Won', 'Drawn', 'Lost', 'For', 'Against', 'GD', 'Points'];
     
     // determine the type of header data we need to use
     if (headLength === 'short') {
@@ -207,10 +145,19 @@ function createTableHead(tableEl, headLength) {
         var headCell = document.createElement('th');
         // create abbreviation tag and set inner text
         var abbrEl = document.createElement('abbr');
-        abbrEl.innerText = headName;
-        headCell.appendChild(abbrEl);
-        // append cells to the head row
-        headRow.appendChild(headCell);
+        // add reverse html character
+        if (headName === 'Pos') {
+            abbrEl.innerHTML = headName + '&#9662';
+            // add id for reverse functionality
+            abbrEl.id = 'reverseTable';
+            headCell.appendChild(abbrEl);
+            // append cells to the head row
+            headRow.appendChild(headCell);  
+        } else {
+            abbrEl.innerText = headName;
+            headCell.appendChild(abbrEl);
+            headRow.appendChild(headCell);  
+        }  
     });
     
     // create table body and table row data for each team and append to table
@@ -269,9 +216,14 @@ function createTableFooter(leagueTable) {
     var footerTime = document.createElement('time');
     
     // add most recent update time
-        footerTime.innerText = lastupdated();
+        footerTime.innerText = lastUpdated();
     // append span to footer cell
     footerCell.appendChild(footerTime);
+    
+    // check if we have zone positions for the table, if so add them
+    if (league.zonePositions) {
+        addTableZones(league.zonePositions);
+    }
 }
 
 
@@ -282,17 +234,12 @@ function createLeague(data) {
     var container = document.querySelector('#leagueTable');
     var leagueTable = document.createElement('table');
     var leagueCaption = document.createElement('caption');
+    
     // first sort the teams
-    sort();
+        sort();    
     
     // remove old league if there is one
-    var containerChildNodes = [].slice.apply(container.childNodes);
-    containerChildNodes.forEach(function(node) {
-        if (node.nodeName === 'TABLE') {
-            // remove the table element
-            node.parentNode.removeChild(node);
-        }
-    });
+    removeLeague();
     
     // store table data
     league.tableData['leagueName'] = data.leagueName;
@@ -312,29 +259,30 @@ function createLeague(data) {
     if (data.footer) {
         createTableFooter(leagueTable);   
     }
+    
+    // setup reverse listeners and handler
+    reverseSetup();
 }
 
 
 function addTeam(team) {
     var sorted = league.sortedLeague;
-    var temp = league.tempLeague;
     
-    // check if table has been rendered - if so, we add team and sort if possible
+    // throw error if positionOverride() has been used
+    if (league.positionedManually) {
+        throw new Error('Teams cannot be added once positionOverride() has been called.');
+    }
+    
+    // push team to sorted league array for processing
+    sorted.push(team);
+    console.log(league.sortedLeague);
+    
+    // check if table has been rendered - if so, we sort if possible
     if (document.querySelector('#leagueTable table')) {
-        temp.push(team);
         internalSortAndRender();
     }
-    
-    // push team to temporary array for sorting
-    temp.push(team);
-    console.log(league.tempLeague);
-    
-    // check whether we are adding teams to an existing league
-    if (sorted.length) {
-        league.tempLeague = league.tempLeague.concat(sorted);
-        league.sortedLeague.length = 0;
-    }
 }
+
 
 function positionOverride(positions) {
     var sorted = league.sortedLeague;
@@ -366,6 +314,9 @@ function positionOverride(positions) {
 
 
 function addTableZones(zonePosition) {
+    // store zone positons
+    league['zonePositions'] = zonePosition;
+    
     var zoneArgArray = false;
     // check whether array or number
     if(Array.isArray(zonePosition)) {
@@ -412,11 +363,16 @@ function updateTeam(name, data) {
         });
     });
     // re-render the table and sort if we can
-    internalSortAndRender();
+    internalSortAndRender(league.sortedLeague);
 }
 
 
 function deleteTeam(name) {
+    // throw error if positionOverride() has been used
+    if (league.positionedManually) {
+        throw new Error('Teams cannot be deleted once positionOverride() has been called.');
+    }
+    
     var deleteIndex;
     var nameEdited = name.toLowerCase();
     
@@ -429,7 +385,7 @@ function deleteTeam(name) {
     // delete from the league
     league.sortedLeague.splice(deleteIndex, 1);
     // re-render the table
-    createLeague(league.leagueName, league.colLength);
+    internalSortAndRender();
 }
 
 
@@ -443,7 +399,7 @@ function deleteTeam(name) {
 
 function mockData() {
     addTeam({
-        name: 'liverpool',
+        name: 'gandalf',
         GP: 15,
         W: 1,
         D: 0,
@@ -455,7 +411,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'tottenham',
+        name: 'frodo',
         GP: 15,
         W: 1,
         D: 0,
@@ -467,7 +423,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'chelsea',
+        name: 'aragron',
         GP: 15,
         W: 1,
         D: 0,
@@ -479,7 +435,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'arsenal',
+        name: 'bilbo',
         GP: 15,
         W: 1,
         D: 0,
@@ -491,7 +447,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'burnley',
+        name: 'gimli',
         GP: 15,
         W: 3,
         D: 0,
@@ -503,7 +459,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'swansea',
+        name: 'sauron',
         GP: 15,
         W: 1,
         D: 0,
@@ -515,7 +471,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'brighton',
+        name: 'merry',
         GP: 15,
         W: 1,
         D: 0,
@@ -527,7 +483,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'stoke',
+        name: 'elrond',
         GP: 15,
         W: 1,
         D: 0,
@@ -539,7 +495,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'derby',
+        name: 'mount doom',
         GP: 15,
         W: 1,
         D: 0,
@@ -551,7 +507,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'west ham',
+        name: 'white tree',
         GP: 15,
         W: 1,
         D: 0,
