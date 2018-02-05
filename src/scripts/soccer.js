@@ -20,12 +20,13 @@ function sort() {
         }
     });
     
+    // add positions to teams
+    addPositions(league.sortedLeague);
+    
+    // check if the league is reversed
     if (league.reversed) {
         league.sortedLeague.reverse();
     }
-    
-    // add positions to teams
-    addPositions(league.sortedLeague);
 }
 
 
@@ -81,24 +82,22 @@ function reverseSetup() {
 
 
 function reverseTable() {
+    // check reversed state
     if (league.reversed) {
         league.reversed = false;
-        // reverse the table order
-        league.sortedLeague.reverse();
-        // re-render
-        createLeague();
     } else {
         league.reversed = true;
-        // reverse the table order
-        league.sortedLeague.reverse();
-        // re-render
-        createLeague();
     }
+    
+    // reverse the table order
+    league.sortedLeague.reverse();
+    // re-render
+    createLeague();
 }
 
 
 function removeLeague() {
-    var container = document.querySelector('#leagueTable');
+    var container = document.querySelector('.league-table');
     
     var containerChildNodes = [].slice.apply(container.childNodes);
     containerChildNodes.forEach(function(node) {
@@ -239,7 +238,7 @@ function createTableFooter(leagueTable) {
 
 
 function createLeague(data) {
-    var container = document.querySelector('#leagueTable');
+    var container = document.querySelector('.league-table');
     var leagueTable = document.createElement('table');
     var leagueCaption = document.createElement('caption');
     
@@ -286,7 +285,7 @@ function addTeam(team) {
     console.log(league.sortedLeague);
     
     // check if table has been rendered - if so, we sort if possible
-    if (document.querySelector('#leagueTable table')) {
+    if (document.querySelector('.league-table table')) {
         createLeague();
     }
 }
@@ -331,7 +330,7 @@ function addTableZones(zonePosition) {
         zoneArgArray = true;
     }
     // grab the number of teams in the table
-    var numOfTeamsNode = document.querySelectorAll('#leagueTable table tbody tr');
+    var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
     // convert node like array into array we can work with
     var numOfTeamsArr = [].slice.apply(numOfTeamsNode);
     
