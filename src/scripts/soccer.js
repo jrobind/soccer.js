@@ -55,6 +55,13 @@ function alphabeticalCheck(a, b) {
 }
 
 
+function nodeLikeToArray(nodeLike) {
+    // convert node-like array to array that we can work with
+    var newArr = [].slice.apply(nodeLike);
+    return newArr
+} 
+
+
 function lastUpdated() {
     var date = new Date();
     // format the date
@@ -92,7 +99,7 @@ function reverseTable() {
     // reverse the table order
     league.sortedLeague.reverse();
     // re-render
-    createLeague();
+    createLeague();   
 }
 
 
@@ -115,7 +122,8 @@ function tableDropdown() {
     container.appendChild(toggle);
     
     // hide teams
-    hideTeams();
+    hideTeams();   
+
 }
 
 
@@ -123,8 +131,9 @@ function hideTeams() {
     // grab all team rows
     var teams = document.querySelectorAll('.league-table table tbody tr');
     // transform to array so we can work with it
-    var unHiddenArr = [].slice.apply(teams);
+    var unHiddenArr = nodeLikeToArray(teams);
     var newRows = unHiddenArr.splice(league.tableData.show, league.sortedLeague.length);
+    
     // hide team rows
     newRows.forEach(function(teamRow) {
         teamRow.classList.add('hide-team');
@@ -135,7 +144,7 @@ function hideTeams() {
 function showTeams() {
     var hidden = document.querySelectorAll('.hide-team');
     // transform to array so we can work with it
-    var hiddenArr = [].slice.apply(hidden); 
+    var hiddenArr = nodeLikeToArray(hidden);
     
     // show hidden teams
     hiddenArr.forEach(function(team) {
@@ -157,9 +166,9 @@ function dropdownCollapse() {
 function removeLeague() {
     var container = document.querySelector('.league-table');
     
-    var containerChildNodes = [].slice.apply(container.childNodes);
+    var containerChildNodes = nodeLikeToArray(container.childNodes);
     containerChildNodes.forEach(function(node) {
-        if (node.nodeName === 'TABLE') {
+        if (node.nodeName === 'TABLE' || node.classList.contains('toggle')) {
             // remove the table element
             node.parentNode.removeChild(node);
         }
@@ -230,6 +239,8 @@ function createTableData(tableEl) {
     // iterate over each team object create a table row with relevant team data 
     sorted.forEach(function(team) {
         var teamRow = document.createElement('tr');
+        // set name of team as data attribute on row element
+        teamRow.setAttribute('data', team.name);
         tableBody.appendChild(teamRow);
         
         var dataArr = [];
@@ -252,6 +263,8 @@ function createTableData(tableEl) {
             teamRow.appendChild(standardCell);
         });
     });
+    
+    delete league.dropdownReversed;
 }
 
 function createTableFooter(leagueTable) {
@@ -296,6 +309,11 @@ function createLeague(data) {
         league.tableData = data;
     }
     
+    // if only partial team table is set then splice
+    if (league.tableData.show > 0 && !league.tableData.dropdown) {
+        tableSplice();
+    }
+    
     sort();
     // remove old league if there is one
     removeLeague();
@@ -316,15 +334,9 @@ function createLeague(data) {
     
     // setup reverse listeners and handler
     reverseSetup();
-    
-    // check if we already have a toggle div
-    if (!toggleDiv) {
-        // check if we need to add dropdown or show limited number of teams
-        if (league.tableData.show > 0 && !league.tableData.dropdown) {
-            tableSplice();
-        } else if (league.tableData.show > 0 && league.tableData.dropdown) {
-            tableDropdown();
-        }   
+    // check if we need to set up table toggle
+    if (league.tableData.show > 0 && league.tableData.dropdown) {
+        tableDropdown();   
     }
 }
 
@@ -389,7 +401,7 @@ function addTableZones(zonePosition) {
     // grab the number of teams in the table
     var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
     // convert node like array into array we can work with
-    var numOfTeamsArr = [].slice.apply(numOfTeamsNode);
+    var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
     
     if (!zoneArgArray) {
         // apply zone line to number specified
