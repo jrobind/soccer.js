@@ -20,13 +20,12 @@ function sort() {
         }
     });
     
-    // add positions to teams
-    addPositions(league.sortedLeague);
-    
-    // check if we need to reverse the sorted league
     if (league.reversed) {
         league.sortedLeague.reverse();
     }
+    
+    // add positions to teams
+    addPositions(league.sortedLeague);
 }
 
 
@@ -82,27 +81,18 @@ function reverseSetup() {
 
 
 function reverseTable() {
-    // set reverse to true
-    league.reversed = true;
-    // set back to false if league is already reversed
-    if (league.sortedLeague[0].points < league.sortedLeague[1].points) {
+    if (league.reversed) {
         league.reversed = false;
-    }
-    // revere the league table order
-    league.sortedLeague.reverse();
-    // re-render
-    internalSortAndRender();
-}
-
-
-function internalSortAndRender() {
-    // re-sort the table
-    if (league.positionedManually) {
-        createLeague(league.tableData);    
+        // reverse the table order
+        league.sortedLeague.reverse();
+        // re-render
+        createLeague();
     } else {
-        sort();
-        // re-render the table to show sorted with team updates
-        createLeague(league.tableData);
+        league.reversed = true;
+        // reverse the table order
+        league.sortedLeague.reverse();
+        // re-render
+        createLeague();
     }
 }
 
@@ -117,6 +107,16 @@ function removeLeague() {
             node.parentNode.removeChild(node);
         }
     });
+}
+
+
+
+function storeLeagueData(data) {
+    league.tableData['leagueName'] = data.leagueName;
+    league.tableData['colTitle'] = data.colTitle;
+    league.tableData['footer'] = data.footer;  
+    // set default reverse state to false
+    league.tableData['reversed'] = false;
 }
 
 
@@ -147,7 +147,15 @@ function createTableHead(tableEl, headLength) {
         var abbrEl = document.createElement('abbr');
         // add reverse html character
         if (headName === 'Pos') {
-            abbrEl.innerHTML = headName + '&#9662';
+            var arrowUniCode;
+            
+            if (league.reversed) {
+                arrowUniCode = '&#9653';
+            } else {
+                arrowUniCode = '&#9663';    
+            }
+            // set arrow icon
+            abbrEl.innerHTML = headName + arrowUniCode;
             // add id for reverse functionality
             abbrEl.id = 'reverseTable';
             headCell.appendChild(abbrEl);
@@ -235,28 +243,28 @@ function createLeague(data) {
     var leagueTable = document.createElement('table');
     var leagueCaption = document.createElement('caption');
     
-    // first sort the teams
-        sort();    
+    // sort teams
+    sort();       
     
     // remove old league if there is one
     removeLeague();
     
     // store table data
-    league.tableData['leagueName'] = data.leagueName;
-    league.tableData['colTitle'] = data.colTitle;
-    league.tableData['footer'] = data.footer;
+    if (data) {
+        storeLeagueData(data);
+    }
     
     // set caption text
-    leagueCaption.innerText = data.leagueName;
+    leagueCaption.innerText = league.tableData.leagueName;
     // append table element and table caption to container div
     container.appendChild(leagueTable);
     leagueTable.appendChild(leagueCaption)
     
     // create the tablehead
-    createTableHead(leagueTable, data.colTitle);
+    createTableHead(leagueTable, league.tableData.colTitle);
     
     // check if we need to create the tableFooter
-    if (data.footer) {
+    if (league.tableData.footer) {
         createTableFooter(leagueTable);   
     }
     
@@ -279,7 +287,7 @@ function addTeam(team) {
     
     // check if table has been rendered - if so, we sort if possible
     if (document.querySelector('#leagueTable table')) {
-        internalSortAndRender();
+        createLeague();
     }
 }
 
@@ -309,7 +317,7 @@ function positionOverride(positions) {
     
     league.sortedLeague = tempArr;
     // re-render the table
-    internalSortAndRender();
+    createLeague();
 }
 
 
@@ -363,7 +371,7 @@ function updateTeam(name, data) {
         });
     });
     // re-render the table and sort if we can
-    internalSortAndRender(league.sortedLeague);
+    createLeague();
 }
 
 
@@ -385,7 +393,7 @@ function deleteTeam(name) {
     // delete from the league
     league.sortedLeague.splice(deleteIndex, 1);
     // re-render the table
-    internalSortAndRender();
+    createLeague();
 }
 
 
