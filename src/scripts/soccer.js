@@ -96,6 +96,14 @@ function reverseTable() {
 }
 
 
+function tableSplice() {
+    // remove teams
+    var newLeague = league.sortedLeague.slice(0, league.tableData.show);
+    // set the new league
+    league.sortedLeague = newLeague;
+}
+
+
 function removeLeague() {
     var container = document.querySelector('.league-table');
     
@@ -111,9 +119,12 @@ function removeLeague() {
 
 
 function storeLeagueData(data) {
+    // set user data
     league.tableData['leagueName'] = data.leagueName;
     league.tableData['colTitle'] = data.colTitle;
-    league.tableData['footer'] = data.footer;  
+    league.tableData['footer'] = data.footer; 
+    league.tableData['show'] = data.show;
+    league.tableData['dropdown'] = data.dropdown;
     // set default reverse state to false
     league.tableData['reversed'] = false;
 }
@@ -242,16 +253,23 @@ function createLeague(data) {
     var leagueTable = document.createElement('table');
     var leagueCaption = document.createElement('caption');
     
-    // sort teams
-    sort();       
-    
-    // remove old league if there is one
-    removeLeague();
-    
     // store table data
     if (data) {
         storeLeagueData(data);
     }
+    
+    // sort teams
+    sort();
+    
+    // check if we need to add dropdown or show limited number of teams
+    if (league.tableData.show > 0 && !league.tableData.dropdown) {
+        tableSplice();
+    } else if (data.show > 0 && data.dropdown === true) {
+        tableDropdown();
+    }
+    
+    // remove old league if there is one
+    removeLeague();
     
     // set caption text
     leagueCaption.innerText = league.tableData.leagueName;
@@ -528,7 +546,8 @@ function mockData() {
     createLeague({
         leagueName: 'MOCK LEAGUE',
         colTitle: 'short',
-        footer: true
+        footer: true,
+        show: 5
     });
     
 }
