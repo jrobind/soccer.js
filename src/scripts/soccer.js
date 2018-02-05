@@ -104,6 +104,56 @@ function tableSplice() {
 }
 
 
+function tableDropdown() {
+    // add in collapsible toggle beneath table
+    var container = document.querySelector('.league-table');
+    var toggle = document.createElement('div');
+    toggle.setAttribute('class', 'toggle');
+    // setup click listener
+    toggle.addEventListener('click', dropdownCollapse);
+    // append toggle div to table container
+    container.appendChild(toggle);
+    
+    // hide teams
+    hideTeams();
+}
+
+
+function hideTeams() {
+    // grab all team rows
+    var teams = document.querySelectorAll('.league-table table tbody tr');
+    // transform to array so we can work with it
+    var unHiddenArr = [].slice.apply(teams);
+    var newRows = unHiddenArr.splice(league.tableData.show, league.sortedLeague.length);
+    // hide team rows
+    newRows.forEach(function(teamRow) {
+        teamRow.classList.add('hide-team');
+    }); 
+}
+
+
+function showTeams() {
+    var hidden = document.querySelectorAll('.hide-team');
+    // transform to array so we can work with it
+    var hiddenArr = [].slice.apply(hidden); 
+    
+    // show hidden teams
+    hiddenArr.forEach(function(team) {
+        team.classList.remove('hide-team'); 
+    });   
+}
+
+
+function dropdownCollapse() {
+    var hidden = document.querySelectorAll('.hide-team');
+    if (hidden.length) {
+        showTeams();
+    } else {
+        hideTeams();
+    }
+}
+
+
 function removeLeague() {
     var container = document.querySelector('.league-table');
     
@@ -114,19 +164,6 @@ function removeLeague() {
             node.parentNode.removeChild(node);
         }
     });
-}
-
-
-
-function storeLeagueData(data) {
-    // set user data
-    league.tableData['leagueName'] = data.leagueName;
-    league.tableData['colTitle'] = data.colTitle;
-    league.tableData['footer'] = data.footer; 
-    league.tableData['show'] = data.show;
-    league.tableData['dropdown'] = data.dropdown;
-    // set default reverse state to false
-    league.tableData['reversed'] = false;
 }
 
 
@@ -250,24 +287,16 @@ function createTableFooter(leagueTable) {
 
 function createLeague(data) {
     var container = document.querySelector('.league-table');
+    var toggleDiv = document.querySelector('.toggle');
     var leagueTable = document.createElement('table');
     var leagueCaption = document.createElement('caption');
     
     // store table data
     if (data) {
-        storeLeagueData(data);
+        league.tableData = data;
     }
     
-    // sort teams
     sort();
-    
-    // check if we need to add dropdown or show limited number of teams
-    if (league.tableData.show > 0 && !league.tableData.dropdown) {
-        tableSplice();
-    } else if (data.show > 0 && data.dropdown === true) {
-        tableDropdown();
-    }
-    
     // remove old league if there is one
     removeLeague();
     
@@ -275,7 +304,7 @@ function createLeague(data) {
     leagueCaption.innerText = league.tableData.leagueName;
     // append table element and table caption to container div
     container.appendChild(leagueTable);
-    leagueTable.appendChild(leagueCaption)
+    leagueTable.appendChild(leagueCaption);
     
     // create the tablehead
     createTableHead(leagueTable, league.tableData.colTitle);
@@ -287,6 +316,16 @@ function createLeague(data) {
     
     // setup reverse listeners and handler
     reverseSetup();
+    
+    // check if we already have a toggle div
+    if (!toggleDiv) {
+        // check if we need to add dropdown or show limited number of teams
+        if (league.tableData.show > 0 && !league.tableData.dropdown) {
+            tableSplice();
+        } else if (league.tableData.show > 0 && league.tableData.dropdown) {
+            tableDropdown();
+        }   
+    }
 }
 
 
@@ -547,7 +586,8 @@ function mockData() {
         leagueName: 'MOCK LEAGUE',
         colTitle: 'short',
         footer: true,
-        show: 5
+        show: 5,
+        dropdown: true
     });
     
 }

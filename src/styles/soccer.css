@@ -1,5 +1,6 @@
 .league-table {
     overflow-x: auto;
+    display: inline-block;
 }
 
 .league-table table {
@@ -44,4 +45,14 @@
 
 #reverseTable {
     cursor: pointer;
+}
+
+.hide-team {
+    position: absolute;
+    visibility: hidden;
+}
+
+.toggle {
+    height: 20px;
+    background-color: lightgreen;
 }
