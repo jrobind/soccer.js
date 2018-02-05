@@ -1,3 +1,7 @@
+.league-table {
+    overflow-x: auto;
+}
+
 .league-table table {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
