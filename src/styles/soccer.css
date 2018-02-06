@@ -1,5 +1,4 @@
 .league-table {
-    display: table;
     overflow-x: auto;
 }
 
@@ -57,6 +56,24 @@
 }
 
 .toggle {
-    height: 20px;
-    background-color: lightgreen;
+    display: flex;
+    justify-content: center;
+    height: 15px;
+    width: 50%;
+    margin: auto;
+}
+
+.toggle div {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+}
+
+.toggle-arrow-default {
+    border-top: 7px solid rgba(0, 0, 0, 0.7);
+}
+
+.toggle-arrow-collapse {
+    border-bottom: 7px solid rgba(0, 0, 0, 0.7);
 }
