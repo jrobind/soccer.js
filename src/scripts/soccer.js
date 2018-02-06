@@ -2,7 +2,7 @@ var league = {
     sortedLeague: [],
     positionedManually: false,
     reversed: false,
-    tableData: {}
+    tableData: {},
 };
 
 
@@ -111,23 +111,20 @@ function tableSplice() {
 }
 
 
-function tableDropdown() {
+function createDropdown() {
     // add in collapsible toggle beneath table
     var container = document.querySelector('.league-table');
     var toggle = document.createElement('div');
     toggle.setAttribute('class', 'toggle');
     // setup click listener
-    toggle.addEventListener('click', dropdownCollapse);
+    toggle.addEventListener('click', dropdownToggle);
     // append toggle div to table container
-    container.appendChild(toggle);
-    
-    // hide teams
-    hideTeams();   
-
+    container.appendChild(toggle); 
 }
 
 
 function hideTeams() {
+    league['toggleState'] = 'hidden';
     // grab all team rows
     var teams = document.querySelectorAll('.league-table table tbody tr');
     // transform to array so we can work with it
@@ -142,6 +139,7 @@ function hideTeams() {
 
 
 function showTeams() {
+    league.toggleState = 'show';
     var hidden = document.querySelectorAll('.hide-team');
     // transform to array so we can work with it
     var hiddenArr = nodeLikeToArray(hidden);
@@ -153,12 +151,30 @@ function showTeams() {
 }
 
 
-function dropdownCollapse() {
+function dropdownToggle() {
     var hidden = document.querySelectorAll('.hide-team');
     if (hidden.length) {
         showTeams();
     } else {
         hideTeams();
+    }
+}
+
+
+function checkToggleState(data) {
+    // if user data is true then we hide specified teams and create dropdown
+    if (data) {
+        createDropdown();
+        hideTeams();
+    // if user data is undefined then we are not initialising the table
+    } else {
+        // respect the toggle state 
+        if (league.toggleState === 'show') {
+                createDropdown();   
+        } else {
+            createDropdown();
+            hideTeams();
+        }
     }
 }
 
@@ -174,6 +190,23 @@ function removeLeague() {
         }
     });
 }
+
+
+function createTableCaption() {
+    var container = document.querySelector('.league-table');
+    var leagueTable = document.createElement('table');
+    var leagueCaption = document.createElement('caption');
+    
+    // set caption text
+    leagueCaption.innerText = league.tableData.leagueName;
+    // append table element and table caption to container div
+    container.appendChild(leagueTable);
+    leagueTable.appendChild(leagueCaption);
+    
+    // create the tablehead
+    createTableHead(leagueTable, league.tableData.colTitle);
+}
+
 
 
 function createTableHead(tableEl, headLength) {
@@ -239,8 +272,6 @@ function createTableData(tableEl) {
     // iterate over each team object create a table row with relevant team data 
     sorted.forEach(function(team) {
         var teamRow = document.createElement('tr');
-        // set name of team as data attribute on row element
-        teamRow.setAttribute('data', team.name);
         tableBody.appendChild(teamRow);
         
         var dataArr = [];
@@ -264,12 +295,18 @@ function createTableData(tableEl) {
         });
     });
     
-    delete league.dropdownReversed;
+    // check if we need to create the tableFooter
+    if (league.tableData.footer) {
+        createTableFooter();   
+    }
 }
 
+
 function createTableFooter(leagueTable) {
+    var leagueTable = document.querySelector('.league-table table');
     var footer = document.createElement('tfoot');
     leagueTable.appendChild(footer);
+    
     // create footer row
     var footerRow = document.createElement('tr');
     footer.appendChild(footerRow);
@@ -284,7 +321,7 @@ function createTableFooter(leagueTable) {
     var footerTime = document.createElement('time');
     
     // add most recent update time
-        footerTime.innerText = lastUpdated();
+    footerTime.innerText = lastUpdated();
     // append span to footer cell
     footerCell.appendChild(footerTime);
     
@@ -299,44 +336,27 @@ function createTableFooter(leagueTable) {
 
 
 function createLeague(data) {
-    var container = document.querySelector('.league-table');
-    var toggleDiv = document.querySelector('.toggle');
-    var leagueTable = document.createElement('table');
-    var leagueCaption = document.createElement('caption');
-    
-    // store table data
+    // store table data if present
     if (data) {
         league.tableData = data;
     }
-    
-    // if only partial team table is set then splice
+    // if only partial table requested then splice league table
     if (league.tableData.show > 0 && !league.tableData.dropdown) {
         tableSplice();
     }
     
     sort();
-    // remove old league if there is one
     removeLeague();
     
-    // set caption text
-    leagueCaption.innerText = league.tableData.leagueName;
-    // append table element and table caption to container div
-    container.appendChild(leagueTable);
-    leagueTable.appendChild(leagueCaption);
-    
-    // create the tablehead
-    createTableHead(leagueTable, league.tableData.colTitle);
-    
-    // check if we need to create the tableFooter
-    if (league.tableData.footer) {
-        createTableFooter(leagueTable);   
-    }
+    // create the table caption
+    createTableCaption();
     
     // setup reverse listeners and handler
     reverseSetup();
-    // check if we need to set up table toggle
+    
+    // check wether we need to create dropdown toggle
     if (league.tableData.show > 0 && league.tableData.dropdown) {
-        tableDropdown();   
+        checkToggleState(data);
     }
 }
 
