@@ -14,8 +14,8 @@ var league = {
 function sort() {
     league.sortedLeague.sort(function(a, b) {
         // sort teams in descending order (by default) by points
-        if (a.points !== b.points) {
-            return b.points - a.points;
+        if (a.pts !== b.pts) {
+            return b.pts - a.pts;
         } else {
             // if points are equal then sort by goal difference
             return goalDiffCheck(a, b);
@@ -33,8 +33,8 @@ function sort() {
 
 
 function goalDiffCheck(a, b) {
-    if (a.goalDiff !== b.goalDiff) {
-        return b.goalDiff - a.goalDiff;
+    if (a.gd !== b.gd) {
+        return b.gd - a.gd;
     } else {
         // if goal difference is equal then sort by total goals scored
         return goalsScoredCheck(a, b);
@@ -43,8 +43,8 @@ function goalDiffCheck(a, b) {
 
 
 function goalsScoredCheck(a, b) {
-    if (a.goalsScored !== b.goalsScored) {
-        return b.goalsScored - a.goalsScored;
+    if (a.gs !== b.gs) {
+        return b.gs - a.gs;
     } else {
         // if total goals scored is equal then sort alphabetically
         return alphabeticalCheck(a, b);
@@ -105,6 +105,7 @@ function reverseTable() {
     }
 }
 
+
 function setReverseState() {
     // check reversed state
     if (league.reversed) {
@@ -127,6 +128,7 @@ function reverseZones() {
         zone.classList.add('zone-reverse');
     });
 }
+
 
 function setArrowDirection() { 
     // set direction depending on reverse state
@@ -151,6 +153,25 @@ function checkInput(team) {
     
     return Boolean(duplicate.length);
 }
+
+
+function validateProps(defaults, data) {
+    var propsValid = true;
+    var defaultProps = defaults;
+    var dataProps = Object.getOwnPropertyNames(data);
+    
+    // check default against data props
+    dataProps.forEach(function(prop) {
+        if (defaultProps.indexOf(prop) === -1) {
+            propsValid = false;
+        } 
+    });
+    
+    if (!propsValid) {
+        throw new Error('Incorrect team property passed.')
+    };
+}
+
 
 function tableSplice() {
     // remove teams
@@ -341,7 +362,6 @@ function createTableData(tableEl) {
         teamRow.setAttribute('data', team.position);
         tableBody.appendChild(teamRow);
         
-        
         var dataArr = [];
         for (var prop in team) {
             dataArr.push(team[prop]);
@@ -408,9 +428,14 @@ function createTableFooter(leagueTable) {
 function createLeague(data) {
     // store table data if present
     if (data) {
+        var defaultProps = ['leagueName', 'colTitle', 'footer', 'show', 'dropdown'];
+        // store table data
         league.tableData = data;
+        // validate the table data
+        validateProps(defaultProps, data);
     }
-    // if only partial table requested then splice league table
+    
+    // if partial table requested then splice league table
     if (league.tableData.show > 0 && !league.tableData.dropdown) {
         tableSplice();
     }
@@ -432,8 +457,10 @@ function createLeague(data) {
 
 
 function addTeam(team) {
+    var defaultProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
     var sorted = league.sortedLeague;
     var duplicate = checkInput(team);
+    var validData = validateProps(defaultProps, team);
     
     // if duplicate team throw error
     if (duplicate) {
@@ -524,10 +551,10 @@ function updateTeam(name, data) {
     
     var dataPropNames = Object.getOwnPropertyNames(data);
     var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
-    // check that the correct property was passed in
+    // check that a valid team property was passed in
     dataPropNames.forEach(function(prop){
         if (teamToUpdatePropNames.indexOf(prop) === -1) {
-            throw new Error('Incorrect property passed.');
+            throw new Error('Incorrect team property passed.');
             return;
         }
     });
@@ -583,122 +610,122 @@ function deleteTeam(name) {
 function mockData() {
     addTeam({
         name: 'gandalf',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 15,
-        points: 29
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 15,
+        pts: 29
     })
     
         addTeam({
         name: 'frodo',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 19
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 19
     })
     
         addTeam({
         name: 'aragron',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 27
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 27
     })
     
         addTeam({
         name: 'bilbo',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 25
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 25
     })
     
         addTeam({
         name: 'gimli',
-        GP: 15,
-        W: 3,
-        D: 0,
-        L: 4,
-        goalsScored: 12,
-        A: 4,
-        goalDiff: 5,
-        points: 7
+        gp: 15,
+        w: 3,
+        d: 0,
+        l: 4,
+        gs: 12,
+        a: 4,
+        gd: 5,
+        pts: 7
     })
     
         addTeam({
         name: 'sauron',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 1,
-        A: 4,
-        goalDiff: 5,
-        points: 10
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 1,
+        a: 4,
+        gd: 5,
+        pts: 10
     })
     
         addTeam({
         name: 'merry',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 11
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 11
     })
     
         addTeam({
         name: 'elrond',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 5
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 5
     })
     
         addTeam({
         name: 'mount doom',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 10
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 10
     })
     
         addTeam({
         name: 'white tree',
-        GP: 15,
-        W: 1,
-        D: 0,
-        L: 4,
-        goalsScored: 5,
-        A: 4,
-        goalDiff: 5,
-        points: 17
+        gp: 15,
+        w: 1,
+        d: 0,
+        l: 4,
+        gs: 5,
+        a: 4,
+        gd: 5,
+        pts: 17
     })
         
     createLeague({
