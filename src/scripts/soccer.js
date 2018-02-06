@@ -57,8 +57,8 @@ function alphabeticalCheck(a, b) {
 
 function nodeLikeToArray(nodeLike) {
     // convert node-like array to array that we can work with
-    var newArr = [].slice.apply(nodeLike);
-    return newArr
+    var arr = [].slice.apply(nodeLike);
+    return arr;
 } 
 
 
@@ -89,17 +89,41 @@ function reverseSetup() {
 
 
 function reverseTable() {
+    setReverseState();
+    // reverse the table order
+    league.sortedLeague.reverse();
+    // re-render
+    createLeague(); 
+    
+    // check if we have table zones present
+    if (league.reversed) {
+        if (league.hasOwnProperty('zonePositions')) {
+            reverseZones();
+        }   
+    }
+}
+
+function setReverseState() {
     // check reversed state
     if (league.reversed) {
         league.reversed = false;
     } else {
         league.reversed = true;
     }
-    
-    // reverse the table order
-    league.sortedLeague.reverse();
-    // re-render
-    createLeague();   
+}
+
+
+function reverseZones() {
+    // grab the number of team rows with zone class
+    var zones = document.querySelectorAll('.zone');
+    // convert node like array into array we can work with
+    var zonesArr = nodeLikeToArray(zones);
+
+    // add reverse zone class
+    zonesArr.forEach(function(zone) {
+        zone.classList.remove('zone');
+        zone.classList.add('zone-reverse');
+    });
 }
 
 
@@ -112,14 +136,22 @@ function tableSplice() {
 
 
 function createDropdown() {
-    // add in collapsible toggle beneath table
-    var container = document.querySelector('.league-table');
-    var toggle = document.createElement('div');
-    toggle.setAttribute('class', 'toggle');
+    // add in collapsible toggle to the bottom of table
+    var container = document.querySelector('.league-table table');
+    var toggleRow = document.createElement('tr');
+    container.appendChild(toggleRow);
+    
+    var toggleTd = document.createElement('td');
+    // set td to span all table columns
+    toggleTd.setAttribute('colspan', '10');
+    var toggleDiv = document.createElement('div');
+    // set toggle div class
+    toggleDiv.setAttribute('class', 'toggle');
+    toggleTd.appendChild(toggleDiv);
+    toggleRow.appendChild(toggleTd);
+
     // setup click listener
-    toggle.addEventListener('click', dropdownToggle);
-    // append toggle div to table container
-    container.appendChild(toggle); 
+    toggleDiv.addEventListener('click', dropdownToggle);
 }
 
 
@@ -153,6 +185,7 @@ function showTeams() {
 
 function dropdownToggle() {
     var hidden = document.querySelectorAll('.hide-team');
+    // show or hide teams depending on whether we are currently hiding teams
     if (hidden.length) {
         showTeams();
     } else {
@@ -272,7 +305,10 @@ function createTableData(tableEl) {
     // iterate over each team object create a table row with relevant team data 
     sorted.forEach(function(team) {
         var teamRow = document.createElement('tr');
+        // set team position as data attr on table row
+        teamRow.setAttribute('data', team.position);
         tableBody.appendChild(teamRow);
+        
         
         var dataArr = [];
         for (var prop in team) {
@@ -412,33 +448,26 @@ function positionOverride(positions) {
 function addTableZones(zonePosition) {
     // store zone positons
     league['zonePositions'] = zonePosition;
-    
-    var zoneArgArray = false;
-    // check whether array or number
-    if(Array.isArray(zonePosition)) {
-        zoneArgArray = true;
+
+    // check whether array
+    if(!Array.isArray(zonePosition)) {
+        throw new Error('Invalid argument. Zone positions must be passed as an array.')
     }
     // grab the number of teams in the table
     var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
     // convert node like array into array we can work with
     var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
     
-    if (!zoneArgArray) {
-        // apply zone line to number specified
-        var team = zonePosition -1;
-        var teamForZone = numOfTeamsArr[team];
-        // apply bottom border class on the team row
-        teamForZone.classList.add('zone');
-    } else {
-        // array case
-        zonePosition.forEach(function(zone) {
-            numOfTeamsArr.forEach(function(teamRow, index) {
-                if(zone === index + 1) {
-                    teamRow.classList.add('zone');
-                }    
-            });
+    // set zone class on correct team rows
+    zonePosition.forEach(function(zone) {
+        numOfTeamsArr.forEach(function(teamRow) {
+            var position = Number(teamRow.getAttribute('data'));
+            
+            if(position === zone) {
+                teamRow.classList.add('zone');
+            }    
         });
-    }
+    });
 }
 
 
