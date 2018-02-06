@@ -11,11 +11,11 @@
 }
 
 .zone {
-    border-bottom: 1.6px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
 }
 
 .zone-reverse {
-    border-top:  1.6px solid rgba(0, 0, 0, 0.6);
+    border-top:  2px solid rgba(0, 0, 0, 0.6);
 }
 
 .league-table thead th {
@@ -46,7 +46,7 @@
     font-size: 1.1em;
 }
 
-#reverseTable {
+#reverseTable, .toggle div {
     cursor: pointer;
 }
 
@@ -64,16 +64,27 @@
 }
 
 .toggle div {
+    margin: auto;
     width: 0;
     height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
 }
 
 .toggle-arrow-default {
-    border-top: 7px solid rgba(0, 0, 0, 0.7);
+    border-top: 8px solid rgba(0, 0, 0, 0.7);
 }
 
 .toggle-arrow-collapse {
-    border-bottom: 7px solid rgba(0, 0, 0, 0.7);
+    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
+}
+
+.toggle-arrow-default:hover {
+    border-top: 8px solid rgba(0, 0, 0, 0.9);
+    transform: scale(1.25);
+}
+
+.toggle-arrow-collapse:hover {
+    border-bottom: 8px solid rgba(0, 0, 0, 0.9);
+    transform: scale(1.25);
 }

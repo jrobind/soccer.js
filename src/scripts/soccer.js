@@ -1,7 +1,6 @@
 var league = {
     sortedLeague: [],
     positionedManually: false,
-    reversed: false,
     tableData: {},
 };
 
@@ -72,7 +71,11 @@ function lastUpdated() {
     var sliceGmt = dString.slice(0, 25);
     
     // set new date onto the league object
-    return 'Last updated ' + sliceGmt;
+    var lastUpdated = 'Last updated ' + sliceGmt;
+    // set most recent update time to league object
+    league['lastUpdated'] = lastUpdated;
+    
+    return lastUpdated;
 }
 
 
@@ -111,7 +114,7 @@ function setReverseState() {
     if (league.reversed) {
         league.reversed = false;
     } else {
-        league.reversed = true;
+        league['reversed'] = true;
     }
 }
 
@@ -408,8 +411,13 @@ function createTableFooter(leagueTable) {
     // create span for footer row cell
     var footerTime = document.createElement('time');
     
-    // add most recent update time
-    footerTime.innerText = lastUpdated();
+    // add most recent update time (but not if we are reversing table)
+    if (!league.hasOwnProperty('reversed')) {
+        footerTime.innerText = lastUpdated();   
+    } else {
+        footerTime.innerText = league.lastUpdated;    
+    }
+    
     // append span to footer cell
     footerCell.appendChild(footerTime);
     
@@ -511,13 +519,23 @@ function positionOverride(positions) {
 
 
 function addTableZones(zonePosition) {
-    // store zone positons
-    league['zonePositions'] = zonePosition;
-
+    // current number of positions on table
+    var totalPos = document.querySelectorAll('.league-table tbody tr').length;
+    // throw error if zone positions are not within a valid range
+    zonePosition.forEach(function(zone) {
+        if (zone > totalPos || zone < 0) {
+            throw new Error('Zone positions are not within valid team range.');
+        }
+    });
+    
     // check whether array
     if(!Array.isArray(zonePosition)) {
         throw new Error('Invalid argument. Zone positions must be passed as an array.')
     }
+    
+    // store zone positons
+    league['zonePositions'] = zonePosition;
+
     // grab the number of teams in the table
     var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
     // convert node like array into array we can work with
