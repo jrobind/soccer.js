@@ -6,7 +6,9 @@ var league = {
 };
 
 
+
 /*-------------UTILITY FUNCTIONS------------*/
+
 
 
 function sort() {
@@ -126,11 +128,34 @@ function reverseZones() {
     });
 }
 
+function setArrowDirection() { 
+    // set direction depending on reverse state
+    if (league.reversed) {
+        return '&#9653';
+    } else {
+        return '&#9663';    
+    }
+}
+
+
+function checkInput(team) {
+    var name;
+    typeof team === 'string' ? name = team : name = team.name;
+    
+    // check whether name already exits
+    var duplicate = league.sortedLeague.map(function(team) {
+        return team.name;
+    }).filter(function(sortedName) {
+        return sortedName === name;
+    });
+    
+    return Boolean(duplicate.length);
+}
 
 function tableSplice() {
     // remove teams
     var newLeague = league.sortedLeague.slice(0, league.tableData.show);
-    // set the new league
+    // update the league
     league.sortedLeague = newLeague;
 }
 
@@ -147,11 +172,17 @@ function createDropdown() {
     var toggleDiv = document.createElement('div');
     // set toggle div class
     toggleDiv.setAttribute('class', 'toggle');
+    
+    // create toggle arrow
+    var arrowDiv = document.createElement('div');
+    // set dafult arrow class
+    arrowDiv.classList.add('toggle-arrow-default');
+    toggleDiv.appendChild(arrowDiv);
     toggleTd.appendChild(toggleDiv);
     toggleRow.appendChild(toggleTd);
 
-    // setup click listener
-    toggleDiv.addEventListener('click', dropdownToggle);
+    // setup click listener for toggle arrow
+    arrowDiv.addEventListener('click', dropdownToggle);
 }
 
 
@@ -184,12 +215,19 @@ function showTeams() {
 
 
 function dropdownToggle() {
+    var toggleArrow = document.querySelector('.toggle div');
     var hidden = document.querySelectorAll('.hide-team');
     // show or hide teams depending on whether we are currently hiding teams
     if (hidden.length) {
         showTeams();
+        // change arrow direction
+        toggleArrow.classList.remove('toggle-arrow-default');
+        toggleArrow.classList.add('toggle-arrow-collapse');
     } else {
         hideTeams();
+        // change arrow direction
+        toggleArrow.classList.remove('toggle-arrow-collapse');
+        toggleArrow.classList.add('toggle-arrow-default');
     }
 }
 
@@ -269,13 +307,7 @@ function createTableHead(tableEl, headLength) {
         var abbrEl = document.createElement('abbr');
         // add reverse html character
         if (headName === 'Pos') {
-            var arrowUniCode;
-            
-            if (league.reversed) {
-                arrowUniCode = '&#9653';
-            } else {
-                arrowUniCode = '&#9663';    
-            }
+            var arrowUniCode = setArrowDirection();
             // set arrow icon
             abbrEl.innerHTML = headName + arrowUniCode;
             // add id for reverse functionality
@@ -368,7 +400,9 @@ function createTableFooter(leagueTable) {
 }
 
 
+
 /*------------API FUNCTIONS------------*/
+
 
 
 function createLeague(data) {
@@ -399,9 +433,13 @@ function createLeague(data) {
 
 function addTeam(team) {
     var sorted = league.sortedLeague;
+    var duplicate = checkInput(team);
     
+    // if duplicate team throw error
+    if (duplicate) {
+        throw new Error('Team name already exists.')
     // throw error if positionOverride() has been used
-    if (league.positionedManually) {
+    } else if (league.positionedManually) {
         throw new Error('Teams cannot be added once positionOverride() has been called.');
     }
     
@@ -409,7 +447,7 @@ function addTeam(team) {
     sorted.push(team);
     console.log(league.sortedLeague);
     
-    // check if table has been rendered - if so, we sort if possible
+    // check if table has been rendered - if so, we sort (if possible)
     if (document.querySelector('.league-table table')) {
         createLeague();
     }
@@ -472,6 +510,13 @@ function addTableZones(zonePosition) {
 
 
 function updateTeam(name, data) {
+    var teamName = checkInput(name);
+    
+    // if team name not present throw error
+    if (!teamName) {
+        throw new Error('Team name does not exist.');
+    }
+    
     // find team and update with relevant data
     var teamToUpdate = league.sortedLeague.filter(function(sortedTeam) {
         return sortedTeam.name === name;
@@ -479,6 +524,14 @@ function updateTeam(name, data) {
     
     var dataPropNames = Object.getOwnPropertyNames(data);
     var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
+    // check that the correct property was passed in
+    dataPropNames.forEach(function(prop){
+        if (teamToUpdatePropNames.indexOf(prop) === -1) {
+            throw new Error('Incorrect property passed.');
+            return;
+        }
+    });
+    
     
     teamToUpdatePropNames.forEach(function(teamProp) {
         dataPropNames.forEach(function(dataProp) {
@@ -493,8 +546,13 @@ function updateTeam(name, data) {
 
 
 function deleteTeam(name) {
+    var teamName = checkInput(name);
+    
+    // if team name not present throw error
+    if (!teamName) {
+        throw new Error('Team name does not exist.');
     // throw error if positionOverride() has been used
-    if (league.positionedManually) {
+    } else if (league.positionedManually) {
         throw new Error('Teams cannot be deleted once positionOverride() has been called.');
     }
     
