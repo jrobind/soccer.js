@@ -1,6 +1,6 @@
 .league-table {
+    display: table;
     overflow-x: auto;
-    display: inline-block;
 }
 
 .league-table table {
@@ -13,6 +13,10 @@
 
 .zone {
     border-bottom: 1.6px solid rgba(0, 0, 0, 0.6);
+}
+
+.zone-reverse {
+    border-top:  1.6px solid rgba(0, 0, 0, 0.6);
 }
 
 .league-table thead th {
