@@ -507,9 +507,6 @@ function addTeam(team) {
     // if duplicate team throw error
     if (duplicate) {
         throw new Error('Team name already exists.')
-    // throw error if positionOverride() has been used
-    } else if (league.positionedManually) {
-        throw new Error('Teams cannot be added once positionOverride() has been called.');
     }
     
     // push team to sorted league array for processing
@@ -520,35 +517,6 @@ function addTeam(team) {
     if (document.querySelector('.league-table table')) {
         createLeague();
     }
-}
-
-
-function positionOverride(positions) {
-    var sorted = league.sortedLeague;
-    league.positionedManually = true;
-    
-    var pos1 = positions[0] -1; 
-    var pos2 = positions[1] -1; 
-    
-    // swap team positions
-    var tempArr = new Array(sorted.length);
-    for (var i = 0; i < sorted.length; i ++) {
-        if (i === pos1) {
-            tempArr[pos2] = sorted[i];
-            // change the teams position property
-            sorted[i].position = positions[1];
-        } else if (i === pos2) {
-            tempArr[pos1] = sorted[i];  
-            // change the teams position property
-            sorted[i].position = positions[0];
-        } else {
-            tempArr[i] = sorted[i];
-        }
-    }
-    
-    league.sortedLeague = tempArr;
-    // re-render the table
-    createLeague();
 }
 
 
@@ -630,9 +598,6 @@ function deleteTeam(name) {
     // if team name not present throw error
     if (!teamName) {
         throw new Error('Team name does not exist.');
-    // throw error if positionOverride() has been used
-    } else if (league.positionedManually) {
-        throw new Error('Teams cannot be deleted once positionOverride() has been called.');
     }
     
     var deleteIndex;
