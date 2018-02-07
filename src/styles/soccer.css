@@ -4,38 +4,71 @@
 
 .league-table table {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
-}
-
-.league-table table {
     border-collapse: collapse;
 }
 
 .zone {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 }
 
 .zone-reverse {
     border-top:  2px solid rgba(0, 0, 0, 0.6);
 }
 
-.league-table thead th {
+.league-table thead tr {
     background-color: #f4f4f4;
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
 }
 
-.league-table table td, .league-table table th {
-    padding: 5px 6px;
-    
+.league-table tbody td:last-child, .league-table thead th:last-child{
+    padding-right: 15px;
 }
 
-.league-table tfoot  td{
+.league-table tbody td:first-child, .league-table thead th:first-child{
+    padding-left: 15px;
+}
+
+.league-table thead th:first-child {
+    padding-right: 10px;
+}
+
+.league-table thead th:nth-child(2) {
+    text-align: left;
+}
+
+.league-table td, .league-table th {
+    padding: 7px 6px;
+}
+
+.league-table tr:nth-of-type(even) {
+    background-color: #fbfbfb;
+}
+
+.league-table td:nth-last-of-type(-n+8) {
+    text-align: center;
+    min-width: 20px
+}
+
+.league-table td:nth-of-type(2) {
+    font-weight: 600;
+    padding-right: 15px;
+    max-width: 150px
+}
+
+.league-table tfoot tr{
     padding-top: 10px;
     font-size: 0.75em;
     border: none;
 }
 
-.league-table td {
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.3);
+.league-table tr {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+#lastTeam {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
 }
 
 .league-table caption {
@@ -73,18 +106,34 @@
 
 .toggle-arrow-default {
     border-top: 8px solid rgba(0, 0, 0, 0.7);
+    transition: transform 0.2s ease-in;
 }
 
 .toggle-arrow-collapse {
     border-bottom: 8px solid rgba(0, 0, 0, 0.7);
+    transition: transform 0.2s ease-in;
 }
 
 .toggle-arrow-default:hover {
     border-top: 8px solid rgba(0, 0, 0, 0.9);
-    transform: scale(1.25);
+    transform: scale(1.35);
 }
 
 .toggle-arrow-collapse:hover {
     border-bottom: 8px solid rgba(0, 0, 0, 0.9);
-    transform: scale(1.25);
+    transform: scale(1.35);
+}
+
+.minus {
+    color: #FF0000;
+}
+
+.plus {
+    color: #008000;
+}
+
+@media screen and (max-width: 455px) {
+    .league-table td, .league-table th {
+        padding: 6px 3px;
+    }
 }
