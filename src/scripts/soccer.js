@@ -274,6 +274,34 @@ function checkToggleState(data) {
 }
 
 
+function formatGoalDiff(team) {
+    var plusFormat = '+' + team.gd;
+        
+    // prepend correct symbols to goal difference 
+    if (team.gd > 0) {
+        // remove any uneeded whitespace
+        team.gd = team.gd.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
+    } else if (team.gd < 0) {
+        // remove any uneeded whitespace
+        team.gd = team.gd.toString().replace(/\s+/g, '');
+    }
+}
+
+
+function addGoalDiffClasses(teamRow) {    
+    // check goal diff value from td cell
+    var tds = nodeLikeToArray(teamRow.cells);
+    var gdSpan = tds[8].firstChild;
+    var gd = gdSpan.innerText;
+    
+    if(gd > 0) {
+        gdSpan.classList.add('plus');  
+    } else if (gd < 0) {
+        gdSpan.classList.add('minus');
+    }
+}
+
+
 function removeLeague() {
     var container = document.querySelector('.league-table');
     
@@ -360,6 +388,9 @@ function createTableData(tableEl) {
     
     // iterate over each team object create a table row with relevant team data 
     sorted.forEach(function(team) {
+        // format goal difference
+        formatGoalDiff(team);
+        
         var teamRow = document.createElement('tr');
         // set team position as data attr on table row
         teamRow.setAttribute('data', team.position);
@@ -369,7 +400,7 @@ function createTableData(tableEl) {
         for (var prop in team) {
             dataArr.push(team[prop]);
         }
-        // place team position at front of team data array
+        // place team position at front of team data array (for column headings)
         var teamPos = dataArr[9];
         dataArr.splice(9, 1);
         dataArr.unshift(teamPos);
@@ -384,6 +415,9 @@ function createTableData(tableEl) {
             standardCell.appendChild(dataSpan);
             teamRow.appendChild(standardCell);
         });
+        
+        // add goal difference classes
+        addGoalDiffClasses(teamRow);
     });
     
     // check if we need to create the tableFooter
@@ -646,7 +680,7 @@ function mockData() {
         l: 4,
         gs: 5,
         a: 4,
-        gd: 5,
+        gd: -5,
         pts: 19
     })
     
@@ -658,7 +692,7 @@ function mockData() {
         l: 4,
         gs: 5,
         a: 4,
-        gd: 5,
+        gd: -15,
         pts: 27
     })
     
@@ -706,7 +740,7 @@ function mockData() {
         l: 4,
         gs: 5,
         a: 4,
-        gd: 5,
+        gd: -6,
         pts: 11
     })
     
@@ -718,7 +752,7 @@ function mockData() {
         l: 4,
         gs: 5,
         a: 4,
-        gd: 5,
+        gd: -1,
         pts: 5
     })
     
@@ -730,7 +764,7 @@ function mockData() {
         l: 4,
         gs: 5,
         a: 4,
-        gd: 5,
+        gd: 0,
         pts: 10
     })
     
