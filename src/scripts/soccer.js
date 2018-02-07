@@ -8,6 +8,8 @@
     };
     
     var lib = {};
+    // just for testing!
+    lib['sortedLeague'] = league.sortedLeague;
 
 
     /*-------------UTILITY FUNCTIONS------------*/
@@ -173,8 +175,8 @@
             } 
         });
 
-        if (!propsValid) {
-            throw new Error('Incorrect team property passed.')
+        if (!propsValid || dataProps.length !== defaultProps.length) {
+            throw new Error('Incorrect team property format passed.')
         };
     }
 
