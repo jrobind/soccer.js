@@ -198,15 +198,22 @@ function createDropdown() {
     toggleDiv.setAttribute('class', 'toggle');
     
     // create toggle arrow
-    var arrowDiv = document.createElement('div');
-    // set dafult arrow class
-    arrowDiv.classList.add('toggle-arrow-default');
-    toggleDiv.appendChild(arrowDiv);
+    var toggleArrow = document.createElement('div');
+
+    // set arrow direction
+    if (league.toggleState === 'show') {
+        toggleArrow.classList.remove('toggle-arrow-default');
+        toggleArrow.classList.add('toggle-arrow-collapse');
+    } else {
+        toggleArrow.classList.add('toggle-arrow-default');
+    }
+    
+    toggleDiv.appendChild(toggleArrow);
     toggleTd.appendChild(toggleDiv);
-    toggleRow.appendChild(toggleTd);
+    toggleRow.appendChild(toggleTd);   
 
     // setup click listener for toggle arrow
-    arrowDiv.addEventListener('click', dropdownToggle);
+    toggleArrow.addEventListener('click', dropdownToggle);
 }
 
 
@@ -232,8 +239,13 @@ function showTeams() {
     var hiddenArr = nodeLikeToArray(hidden);
     
     // show hidden teams
-    hiddenArr.forEach(function(team) {
-        team.classList.remove('hide-team'); 
+    hiddenArr.forEach(function(team, index) {
+        if (index + 1 === hiddenArr.length) {
+            team.id = 'lastTeam';
+            team.classList.remove('hide-team');
+        } else {
+            team.classList.remove('hide-team');   
+        }
     });   
 }
 
@@ -679,7 +691,7 @@ function mockData() {
         w: 3,
         d: 0,
         l: 4,
-        gs: 12,
+        gs: 1,
         a: 4,
         gd: 5,
         pts: 7
@@ -693,7 +705,7 @@ function mockData() {
         l: 4,
         gs: 1,
         a: 4,
-        gd: 5,
+        gd: 15,
         pts: 10
     })
     
@@ -716,7 +728,7 @@ function mockData() {
         d: 0,
         l: 4,
         gs: 5,
-        a: 4,
+        a: 14,
         gd: -1,
         pts: 5
     })
@@ -734,7 +746,7 @@ function mockData() {
     })
     
         addTeam({
-        name: 'white tree',
+        name: 'white tree of destiny',
         gp: 15,
         w: 1,
         d: 0,
