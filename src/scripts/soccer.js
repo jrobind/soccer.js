@@ -3,14 +3,21 @@
     
     // table data cache 
     var table = {
-        positionedManually: false,
-        tableData: {},
+        positionedManually: false
     };
     
     // api object 
     var lib = {};
-    
     lib.league = [];
+    
+    var leagueDefaults = {
+        leagueName: 'League',
+        footer: false,
+        dropdown: false,
+        zones: false
+    }
+    
+    var defaultTeamProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
 
 
     /*-------------HELPER FUNCTIONS------------*/
@@ -163,9 +170,9 @@
     }
 
 
-    function validateProps(defaults, data) {
+    function validateProps(data) {
         var propsValid = true;
-        var defaultProps = defaults;
+        var defaultProps = defaultTeamProps;
         var dataProps = Object.getOwnPropertyNames(data);
 
         // check default against data props
@@ -178,6 +185,15 @@
         if (!propsValid || dataProps.length !== defaultProps.length) {
             throw new Error('Incorrect team property format passed.')
         };
+    }
+    
+    
+    function validateTableData(data) {
+        for(var prop in data) {
+            if (leagueDefaults.hasOwnProperty(prop)) {
+                leagueDefaults[prop] = data[prop];
+            }
+        }
     }
 
 
@@ -220,7 +236,7 @@
         var teams = document.querySelectorAll('.league-table table tbody tr');
         // transform to array so we can work with it
         var unHiddenArr = nodeLikeToArray(teams);
-        var newRows = unHiddenArr.splice(table.tableData.dropdown, lib.league.length);
+        var newRows = unHiddenArr.splice(leagueDefaults.dropdown, lib.league.length);
 
         // hide team rows
         newRows.forEach(function(teamRow) {
@@ -330,7 +346,7 @@
         var leagueCaption = document.createElement('caption');
 
         // set caption text
-        leagueCaption.innerText = table.tableData.leagueName;
+        leagueCaption.innerText = leagueDefaults.leagueName;
         // append table element and table caption to container div
         container.appendChild(leagueTable);
         leagueTable.appendChild(leagueCaption);
@@ -422,7 +438,7 @@
         });
 
         // check if we need to create the tableFooter
-        if (table.tableData.footer) {
+        if (leagueDefaults.footer) {
             createTableFooter();   
         }
     }
@@ -464,7 +480,7 @@
     
     
     function addZones() {
-        var zonePosition = table.tableData.zones;
+        var zonePosition = leagueDefaults.zones;
         
         // check whether array
         if(!Array.isArray(zonePosition)) {
@@ -508,11 +524,8 @@
     lib.renderLeague = function(data) {
         // store table data if present
         if (data) {
-            var defaultProps = ['leagueName', 'footer', 'dropdown', 'zones'];
-            // store table data
-            table.tableData = data;
             // validate the table data
-            validateProps(defaultProps, data);
+            validateTableData(data);
         }
 
         sort();
@@ -523,12 +536,12 @@
         reverseSetup();
 
         // check wether we need to create dropdown toggle
-        if (table.tableData.dropdown) {
+        if (leagueDefaults.dropdown) {
             checkToggleState(data);
         }
         
         // check whether we need to add zones
-        if (table.tableData.zones.length) {
+        if (leagueDefaults.zones.length) {
             addZones();
         }
     }
@@ -540,15 +553,13 @@
             throw new Error('Invalid argument. Team objects must be passed within an array.');
         }
         
-        var defaultProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
-        
         // loop over array and validate each team obj
         team.forEach(function(team) {
             var duplicate = checkInput(team); 
             if (duplicate) {
                 throw new Error('Team name already exists.');
             }
-            validateProps(defaultProps, team);
+            validateProps(team);
             // push team to sorted league array
             lib.league.push(team);
         });
@@ -562,29 +573,23 @@
     }
 
 
-    lib.updateTeam = function(name, data) {
-        var teamName = checkInput(name);
+    lib.updateTeam = function(data) {
+        validateProps(data);
+        var teamName = checkInput(data.name);
 
         // if team name not present throw error
         if (!teamName) {
             throw new Error('Team name does not exist.');
         }
 
-        // find team and update with relevant data
+        // find team 
         var teamToUpdate = lib.league.filter(function(sortedTeam) {
             return sortedTeam.name === name;
         })[0];
 
         var dataPropNames = Object.getOwnPropertyNames(data);
         var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
-        // check that a valid team property was passed in
-        dataPropNames.forEach(function(prop){
-            if (teamToUpdatePropNames.indexOf(prop) === -1) {
-                throw new Error('Incorrect team property passed.');
-                return;
-            }
-        });
-
+        // update team data
         teamToUpdatePropNames.forEach(function(teamProp) {
             dataPropNames.forEach(function(dataProp) {
                 if (dataProp === teamProp) {
