@@ -5,7 +5,7 @@ describe('updateTeam()', function() {
     var incorrectPop = {gsp: 20};
     
     beforeEach(function() {
-        soccer.sortedLeague.length = 0;
+        soccer.league.length = 0;
         spyOn(soccer, 'renderLeague');
         soccer.addTeam(team);
     });
@@ -14,13 +14,13 @@ describe('updateTeam()', function() {
     it('should update one team property', function() {
         soccer.updateTeam('Merry Argyle', updatePts);
         
-        expect(soccer.sortedLeague[0].pts).toBe(15);
+        expect(soccer.league[0].pts).toBe(15);
     });
     
     it('should update all team properties', function() {
         soccer.updateTeam('Merry Argyle', updateAll);
         
-        expect(soccer.sortedLeague[0]).toEqual(jasmine.objectContaining(updateAll));
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(updateAll));
     });
     
     it ('should invoke renderLeague()', function() {

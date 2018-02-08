@@ -4,28 +4,28 @@ describe('addTeam()', function() {
     var incorrectprops = [{name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     
     beforeEach(function() {
-        soccer.sortedLeague.length = 0;
+        soccer.league.length = 0;
     });
     
     
     it('should store a team object', function() {
         soccer.addTeam(team);
         
-        expect(soccer.sortedLeague[0]).toEqual(jasmine.any(Object));
+        expect(soccer.league[0]).toEqual(jasmine.any(Object));
     });
     
     it('should return league array containing team object', function() {
         expect(soccer.addTeam(team)).toEqual(jasmine.any(Array));
-        soccer.sortedLeague.length = 0;
+        soccer.league.length = 0;
         expect(soccer.addTeam(team)[0]).toEqual(jasmine.objectContaining(team[0]));
     });
     
     it('should contain default team properties', function() {
         soccer.addTeam(team);
         
-        expect(soccer.sortedLeague[0]).toEqual(jasmine.objectContaining(team[0]));
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(team[0]));
         
-        expect(soccer.sortedLeague[0]).not.toEqual(jasmine.objectContaining({
+        expect(soccer.league[0]).not.toEqual(jasmine.objectContaining({
             name: 'Bilbo Town'
         }));
     });
@@ -33,7 +33,7 @@ describe('addTeam()', function() {
     describe('when to call renderLeague()', function() {
         
         beforeEach(function() {
-            soccer.sortedLeague.length = 0;
+            soccer.league.length = 0;
             spyOn(soccer, 'renderLeague');
         });
         

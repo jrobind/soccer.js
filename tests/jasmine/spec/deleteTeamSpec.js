@@ -2,7 +2,7 @@ describe('deleteTeam()', function() {
     var team = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     
     beforeEach(function() {
-        soccer.sortedLeague.length = 0;
+        soccer.league.length = 0;
         spyOn(soccer, 'renderLeague');
         soccer.addTeam(team);
     });
@@ -11,7 +11,7 @@ describe('deleteTeam()', function() {
     it('should delete a team', function() {
         soccer.deleteTeam('Frodo City');
         
-        expect(soccer.sortedLeague.length).toBe(0);
+        expect(soccer.league.length).toBe(0);
     });
 
     it ('should invoke renderLeague()', function() {

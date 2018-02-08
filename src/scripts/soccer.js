@@ -1,22 +1,23 @@
 (function(root) {
     'use strict'
     
-    var league = {
-        sortedLeague: [],
+    // table data cache 
+    var table = {
         positionedManually: false,
         tableData: {},
     };
     
+    // api object 
     var lib = {};
-    // just for testing!
-    lib['sortedLeague'] = league.sortedLeague;
+    
+    lib.league = [];
 
 
-    /*-------------UTILITY FUNCTIONS------------*/
+    /*-------------HELPER FUNCTIONS------------*/
 
 
     function sort() {
-        league.sortedLeague.sort(function(a, b) {
+        lib.league.sort(function(a, b) {
             // sort teams in descending order (by default) by points
             if (a.pts !== b.pts) {
                 return b.pts - a.pts;
@@ -27,11 +28,11 @@
         });
 
         // add positions to teams
-        addPositions(league.sortedLeague);
+        addPositions(lib.league);
 
         // check if the league is reversed
-        if (league.reversed) {
-            league.sortedLeague.reverse();
+        if (table.reversed) {
+            lib.league.reverse();
         }
     }
 
@@ -78,7 +79,7 @@
         // set new date onto the league object
         var lastUpdated = 'Last updated ' + sliceGmt;
         // set most recent update time to league object
-        league['lastUpdated'] = lastUpdated;
+        table['lastUpdated'] = lastUpdated;
 
         return lastUpdated;
     }
@@ -101,13 +102,13 @@
     function reverseTable() {
         setReverseState();
         // reverse the table order
-        league.sortedLeague.reverse();
+        lib.league.reverse();
         // re-render
         lib.renderLeague(); 
 
         // check if we have table zones present
-        if (league.reversed) {
-            if (league.hasOwnProperty('zonePositions')) {
+        if (table.reversed) {
+            if (table.hasOwnProperty('zonePositions')) {
                 reverseZones();
             }   
         }
@@ -116,10 +117,10 @@
 
     function setReverseState() {
         // check reversed state
-        if (league.reversed) {
-            league.reversed = false;
+        if (table.reversed) {
+            table.reversed = false;
         } else {
-            league['reversed'] = true;
+            table['reversed'] = true;
         }
     }
 
@@ -139,7 +140,7 @@
 
     function setArrowDirection() { 
         // set direction depending on reverse state
-        if (league.reversed) {
+        if (table.reversed) {
             return '&#9653';
         } else {
             return '&#9663';    
@@ -152,7 +153,7 @@
         typeof team === 'string' ? name = team : name = team.name;
 
         // check whether name already exits
-        var duplicate = league.sortedLeague.map(function(team) {
+        var duplicate = lib.league.map(function(team) {
             return team.name;
         }).filter(function(sortedName) {
             return sortedName === name;
@@ -197,7 +198,7 @@
         var toggleArrow = document.createElement('div');
 
         // set arrow direction
-        if (league.toggleState === 'show') {
+        if (table.toggleState === 'show') {
             toggleArrow.classList.remove('toggle-arrow-default');
             toggleArrow.classList.add('toggle-arrow-collapse');
         } else {
@@ -214,12 +215,12 @@
 
 
     function hideTeams() {
-        league['toggleState'] = 'hidden';
+        table['toggleState'] = 'hidden';
         // grab all team rows
         var teams = document.querySelectorAll('.league-table table tbody tr');
         // transform to array so we can work with it
         var unHiddenArr = nodeLikeToArray(teams);
-        var newRows = unHiddenArr.splice(league.tableData.dropdown, league.sortedLeague.length);
+        var newRows = unHiddenArr.splice(table.tableData.dropdown, lib.league.length);
 
         // hide team rows
         newRows.forEach(function(teamRow) {
@@ -229,7 +230,7 @@
 
 
     function showTeams() {
-        league.toggleState = 'show';
+        table.toggleState = 'show';
         var hidden = document.querySelectorAll('.hide-team');
         // transform to array so we can work with it
         var hiddenArr = nodeLikeToArray(hidden);
@@ -272,7 +273,7 @@
         // if user data is undefined then we are not initialising the table
         } else {
             // respect the toggle state 
-            if (league.toggleState === 'show') {
+            if (table.toggleState === 'show') {
                     createDropdown();   
             } else {
                 createDropdown();
@@ -329,7 +330,7 @@
         var leagueCaption = document.createElement('caption');
 
         // set caption text
-        leagueCaption.innerText = league.tableData.leagueName;
+        leagueCaption.innerText = table.tableData.leagueName;
         // append table element and table caption to container div
         container.appendChild(leagueTable);
         leagueTable.appendChild(leagueCaption);
@@ -380,7 +381,7 @@
 
 
     function createTableData(tableEl) {
-        var sorted = league.sortedLeague;
+        var sorted = lib.league;
 
         // create table body and append to table
         var tableBody = document.createElement('tbody');
@@ -421,7 +422,7 @@
         });
 
         // check if we need to create the tableFooter
-        if (league.tableData.footer) {
+        if (table.tableData.footer) {
             createTableFooter();   
         }
     }
@@ -446,24 +447,24 @@
         var footerTime = document.createElement('time');
 
         // add most recent update time (but not if we are reversing table)
-        if (!league.hasOwnProperty('reversed')) {
+        if (!table.hasOwnProperty('reversed')) {
             footerTime.innerText = lastUpdated();   
         } else {
-            footerTime.innerText = league.lastUpdated;    
+            footerTime.innerText = table.lastUpdated;    
         }
 
         // append span to footer cell
         footerCell.appendChild(footerTime);
 
         // check if we have zone positions for the table, if so add them
-        if (league.zonePositions) {
+        if (table.zonePositions) {
             addZones();
         }
     }
     
     
     function addZones() {
-        var zonePosition = league.tableData.zones;
+        var zonePosition = table.tableData.zones;
         
         // check whether array
         if(!Array.isArray(zonePosition)) {
@@ -480,7 +481,7 @@
         });
 
         // store zone positons
-        league['zonePositions'] = zonePosition;
+        table['zonePositions'] = zonePosition;
 
         var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
         // convert node like array into array we can work with
@@ -509,7 +510,7 @@
         if (data) {
             var defaultProps = ['leagueName', 'footer', 'dropdown', 'zones'];
             // store table data
-            league.tableData = data;
+            table.tableData = data;
             // validate the table data
             validateProps(defaultProps, data);
         }
@@ -522,12 +523,12 @@
         reverseSetup();
 
         // check wether we need to create dropdown toggle
-        if (league.tableData.dropdown) {
+        if (table.tableData.dropdown) {
             checkToggleState(data);
         }
         
         // check whether we need to add zones
-        if (league.tableData.zones.length) {
+        if (table.tableData.zones.length) {
             addZones();
         }
     }
@@ -549,7 +550,7 @@
             }
             validateProps(defaultProps, team);
             // push team to sorted league array
-            league.sortedLeague.push(team);
+            lib.league.push(team);
         });
 
         // check if table has been rendered - if so, we sort (if possible)
@@ -557,7 +558,7 @@
             lib.renderLeague();
         }
         
-        return league.sortedLeague;
+        return lib.league;
     }
 
 
@@ -570,7 +571,7 @@
         }
 
         // find team and update with relevant data
-        var teamToUpdate = league.sortedLeague.filter(function(sortedTeam) {
+        var teamToUpdate = lib.league.filter(function(sortedTeam) {
             return sortedTeam.name === name;
         })[0];
 
@@ -583,7 +584,6 @@
                 return;
             }
         });
-
 
         teamToUpdatePropNames.forEach(function(teamProp) {
             dataPropNames.forEach(function(dataProp) {
@@ -608,14 +608,14 @@
         var deleteIndex;
         var nameEdited = name.toLowerCase();
 
-        league.sortedLeague.forEach(function(sortedTeam, index) {
+        lib.league.forEach(function(sortedTeam, index) {
             if (sortedTeam.name.toLowerCase() === nameEdited) {
                 deleteIndex = index;
             };
         });
 
         // delete from the league
-        league.sortedLeague.splice(deleteIndex, 1);
+        lib.league.splice(deleteIndex, 1);
         // re-render the table
         lib.renderLeague();
     }
