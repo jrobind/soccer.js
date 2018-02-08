@@ -103,7 +103,7 @@
         // reverse the table order
         league.sortedLeague.reverse();
         // re-render
-        lib.createLeague(); 
+        lib.renderLeague(); 
 
         // check if we have table zones present
         if (league.reversed) {
@@ -504,7 +504,7 @@
 
 
 
-    lib.createLeague = function(data) {
+    lib.renderLeague = function(data) {
         // store table data if present
         if (data) {
             var defaultProps = ['leagueName', 'footer', 'dropdown', 'zones'];
@@ -536,7 +536,7 @@
     lib.addTeam = function(team) {
         // check whether array
         if(!Array.isArray(team)) {
-            throw new Error('Invalid argument. Zone positions must be passed as an array.')
+            throw new Error('Invalid argument. Team objects must be passed within an array.');
         }
         
         var defaultProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
@@ -545,7 +545,7 @@
         team.forEach(function(team) {
             var duplicate = checkInput(team); 
             if (duplicate) {
-                throw new Error('Team name already exists.')
+                throw new Error('Team name already exists.');
             }
             validateProps(defaultProps, team);
             // push team to sorted league array
@@ -554,7 +554,7 @@
 
         // check if table has been rendered - if so, we sort (if possible)
         if (document.querySelector('.league-table table')) {
-            lib.createLeague();
+            lib.renderLeague();
         }
         
         return league.sortedLeague;
@@ -593,7 +593,7 @@
             });
         });
         // re-render the table
-        lib.createLeague();
+        lib.renderLeague();
     }
 
 
@@ -617,7 +617,7 @@
         // delete from the league
         league.sortedLeague.splice(deleteIndex, 1);
         // re-render the table
-        lib.createLeague();
+        lib.renderLeague();
     }
     
     // set to window for now

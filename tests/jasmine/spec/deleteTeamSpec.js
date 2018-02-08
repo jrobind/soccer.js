@@ -3,7 +3,7 @@ describe('deleteTeam()', function() {
     
     beforeEach(function() {
         soccer.sortedLeague.length = 0;
-        spyOn(soccer, 'createLeague');
+        spyOn(soccer, 'renderLeague');
         soccer.addTeam(team);
     });
 
@@ -14,10 +14,10 @@ describe('deleteTeam()', function() {
         expect(soccer.sortedLeague.length).toBe(0);
     });
 
-    it ('should invoke createLeague()', function() {
+    it ('should invoke renderLeague()', function() {
         soccer.deleteTeam('Frodo City');
         
-        expect(soccer.createLeague).toHaveBeenCalled();
+        expect(soccer.renderLeague).toHaveBeenCalled();
     });
     
     it('should throw Error if team name does not exist', function() {

@@ -6,7 +6,7 @@ describe('updateTeam()', function() {
     
     beforeEach(function() {
         soccer.sortedLeague.length = 0;
-        spyOn(soccer, 'createLeague');
+        spyOn(soccer, 'renderLeague');
         soccer.addTeam(team);
     });
 
@@ -23,10 +23,10 @@ describe('updateTeam()', function() {
         expect(soccer.sortedLeague[0]).toEqual(jasmine.objectContaining(updateAll));
     });
     
-    it ('should invoke createLeague()', function() {
+    it ('should invoke renderLeague()', function() {
         soccer.updateTeam('Merry Argyle', updatePts);
         
-        expect(soccer.createLeague).toHaveBeenCalled();
+        expect(soccer.renderLeague).toHaveBeenCalled();
     });
     
     it('should throw Error if team name does not exist', function() {

@@ -30,14 +30,14 @@ describe('addTeam()', function() {
         }));
     });
    
-    describe('when to call createLeague()', function() {
+    describe('when to call renderLeague()', function() {
         
         beforeEach(function() {
             soccer.sortedLeague.length = 0;
-            spyOn(soccer, 'createLeague');
+            spyOn(soccer, 'renderLeague');
         });
         
-        it('should call createLeague() only when a table has been rendered', function() {
+        it('should call renderLeague() only when a table has been rendered', function() {
             var container = document.createElement('div');
             container.setAttribute('class', 'league-table');
             var table = document.createElement('table');
@@ -46,14 +46,14 @@ describe('addTeam()', function() {
             
             soccer.addTeam(team);
             
-            expect(soccer.createLeague).toHaveBeenCalled();
+            expect(soccer.renderLeague).toHaveBeenCalled();
             
             document.body.removeChild(container);
         });
         
         it('should not call createLeague() when no table has been rendered', function() {
             soccer.addTeam(team);
-            expect(soccer.createLeague).not.toHaveBeenCalled();
+            expect(soccer.renderLeague).not.toHaveBeenCalled();
         });
     });
     
