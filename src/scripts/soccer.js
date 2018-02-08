@@ -180,14 +180,6 @@
     }
 
 
-    function tableSplice() {
-        // remove teams
-        var newLeague = league.sortedLeague.slice(0, league.tableData.show);
-        // update the league
-        league.sortedLeague = newLeague;
-    }
-
-
     function createDropdown() {
         // add in collapsible toggle to the bottom of table
         var container = document.querySelector('.league-table table');
@@ -227,7 +219,7 @@
         var teams = document.querySelectorAll('.league-table table tbody tr');
         // transform to array so we can work with it
         var unHiddenArr = nodeLikeToArray(teams);
-        var newRows = unHiddenArr.splice(league.tableData.show, league.sortedLeague.length);
+        var newRows = unHiddenArr.splice(league.tableData.dropdown, league.sortedLeague.length);
 
         // hide team rows
         newRows.forEach(function(teamRow) {
@@ -343,23 +335,15 @@
         leagueTable.appendChild(leagueCaption);
 
         // create the tablehead
-        createTableHead(leagueTable, league.tableData.colTitle);
+        createTableHead(leagueTable);
     }
 
 
 
-    function createTableHead(tableEl, headLength) {
+    function createTableHead(tableEl) {
         var headData;
         // cell data for header
-        var headDataAbbr = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
-        var headDataLng = ['Pos', 'Team', 'Played', 'Won', 'Drawn', 'Lost', 'For', 'Against', 'GD', 'Points'];
-
-        // determine the type of header data we need to use
-        if (headLength === 'short') {
-            headData = headDataAbbr;
-        } else {
-            headData = headDataLng;
-        }
+        var headData = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
 
         // append table head to table
         var tableHead = document.createElement('thead');
@@ -486,16 +470,11 @@
     lib.createLeague = function(data) {
         // store table data if present
         if (data) {
-            var defaultProps = ['leagueName', 'colTitle', 'footer', 'show', 'dropdown'];
+            var defaultProps = ['leagueName', 'footer', 'dropdown', 'zones'];
             // store table data
             league.tableData = data;
             // validate the table data
             validateProps(defaultProps, data);
-        }
-
-        // if partial table requested then splice league table
-        if (league.tableData.show > 0 && !league.tableData.dropdown) {
-            tableSplice();
         }
 
         sort();
@@ -508,7 +487,7 @@
         reverseSetup();
 
         // check wether we need to create dropdown toggle
-        if (league.tableData.show > 0 && league.tableData.dropdown) {
+        if (league.tableData.dropdown) {
             checkToggleState(data);
         }
     }
