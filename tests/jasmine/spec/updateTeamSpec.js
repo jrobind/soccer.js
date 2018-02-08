@@ -35,6 +35,12 @@ describe('updateTeam()', function() {
         }).toThrow(new Error('Team name does not exist.'));
     });
     
+    it('should throw Error if team name is not case sensitive', function() {
+        expect(function(){
+            soccer.updateTeam('mErrY aRGYle');
+        }).toThrow(new Error('Team name does not exist.'));
+    });
+    
     it('should throw Error if incorrect team property used', function() {
         expect(function(){
             soccer.updateTeam('Merry Argyle', incorrectPop);

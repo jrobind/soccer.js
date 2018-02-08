@@ -6,12 +6,18 @@ describe('addTeam()', function() {
     beforeEach(function() {
         soccer.sortedLeague.length = 0;
     });
-
+    
     
     it('should store a team object', function() {
         soccer.addTeam(team);
         
         expect(soccer.sortedLeague[0]).toEqual(jasmine.any(Object));
+    });
+    
+    it('should return league array containing team object', function() {
+        expect(soccer.addTeam(team)).toEqual(jasmine.any(Array));
+        soccer.sortedLeague.length = 0;
+        expect(soccer.addTeam(team)[0]).toEqual(jasmine.objectContaining(team));
     });
     
     it('should contain default team properties', function() {
@@ -22,6 +28,33 @@ describe('addTeam()', function() {
         expect(soccer.sortedLeague[0]).not.toEqual(jasmine.objectContaining({
             name: 'Bilbo Town'
         }));
+    });
+   
+    describe('when to call createLeague()', function() {
+        
+        beforeEach(function() {
+            soccer.sortedLeague.length = 0;
+            spyOn(soccer, 'createLeague');
+        });
+        
+        it('should call createLeague() only when a table has been rendered', function() {
+            var container = document.createElement('div');
+            container.setAttribute('class', 'league-table');
+            var table = document.createElement('table');
+            container.appendChild(table);
+            document.body.appendChild(container);
+            
+            soccer.addTeam(team);
+            
+            expect(soccer.createLeague).toHaveBeenCalled();
+            
+            document.body.removeChild(container);
+        });
+        
+        it('should not call createLeague() when no table has been rendered', function() {
+            soccer.addTeam(team);
+            expect(soccer.createLeague).not.toHaveBeenCalled();
+        });
     });
     
     it('should throw Error if incorrect number of properties used', function() {
