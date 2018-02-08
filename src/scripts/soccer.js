@@ -457,8 +457,45 @@
 
         // check if we have zone positions for the table, if so add them
         if (league.zonePositions) {
-            soccer.addZones(league.zonePositions);
+            addZones();
         }
+    }
+    
+    
+    function addZones() {
+        var zonePosition = league.tableData.zones;
+        
+        // check whether array
+        if(!Array.isArray(zonePosition)) {
+            throw new Error('Invalid argument. Zone positions must be passed as an array.')
+        }
+        // current number of positions on table
+        var totalPos = document.querySelectorAll('.league-table tbody tr').length;
+        
+        // throw error if zone positions are not within a valid range
+        zonePosition.forEach(function(zone) {
+            if (zone > totalPos || zone < 0) {
+                throw new Error('Zone positions are not within valid team range.');
+            }
+        });
+
+        // store zone positons
+        league['zonePositions'] = zonePosition;
+
+        var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
+        // convert node like array into array we can work with
+        var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
+
+        // set zone class on correct team rows
+        zonePosition.forEach(function(zone) {
+            numOfTeamsArr.forEach(function(teamRow) {
+                var position = Number(teamRow.getAttribute('data'));
+
+                if(position === zone) {
+                    teamRow.id = 'zone';
+                }    
+            });
+        });
     }
 
 
@@ -479,8 +516,6 @@
 
         sort();
         removeLeague();
-
-        // create the table caption
         createTableCaption();
 
         // setup reverse listeners and handler
@@ -489,6 +524,11 @@
         // check wether we need to create dropdown toggle
         if (league.tableData.dropdown) {
             checkToggleState(data);
+        }
+        
+        // check whether we need to add zones
+        if (league.tableData.zones.length) {
+            addZones();
         }
     }
 
@@ -518,42 +558,6 @@
         }
         
         return league.sortedLeague;
-    }
-
-
-    lib.addZones = function(zonePosition) {
-        // current number of positions on table
-        var totalPos = document.querySelectorAll('.league-table tbody tr').length;
-        // throw error if zone positions are not within a valid range
-        zonePosition.forEach(function(zone) {
-            if (zone > totalPos || zone < 0) {
-                throw new Error('Zone positions are not within valid team range.');
-            }
-        });
-
-        // check whether array
-        if(!Array.isArray(zonePosition)) {
-            throw new Error('Invalid argument. Zone positions must be passed as an array.')
-        }
-
-        // store zone positons
-        league['zonePositions'] = zonePosition;
-
-        // grab the number of teams in the table
-        var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
-        // convert node like array into array we can work with
-        var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
-
-        // set zone class on correct team rows
-        zonePosition.forEach(function(zone) {
-            numOfTeamsArr.forEach(function(teamRow) {
-                var position = Number(teamRow.getAttribute('data'));
-
-                if(position === zone) {
-                    teamRow.id = 'zone';
-                }    
-            });
-        });
     }
 
 
