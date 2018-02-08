@@ -1,5 +1,5 @@
 describe('updateTeam()', function() {
-    var team = {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
+    var team = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     var updatePts = {pts: 15};
     var updateAll = {gp: 10, w: 4, d: 3, l: 2, gs: 15, a: 7, gd: 8, pts: 34};
     var incorrectPop = {gsp: 20};

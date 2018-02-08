@@ -515,24 +515,30 @@
 
 
     lib.addTeam = function(team) {
-        var defaultProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
-        var sorted = league.sortedLeague;
-        var duplicate = checkInput(team);
-        var validData = validateProps(defaultProps, team);
-
-        // if duplicate team throw error
-        if (duplicate) {
-            throw new Error('Team name already exists.')
+        // check whether array
+        if(!Array.isArray(team)) {
+            throw new Error('Invalid argument. Zone positions must be passed as an array.')
         }
-
-        // push team to sorted league array for processing
-        sorted.push(team);
-        console.log(league.sortedLeague);
+        
+        var defaultProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
+        
+        // loop over array and validate each team obj
+        team.forEach(function(team) {
+            var duplicate = checkInput(team); 
+            if (duplicate) {
+                throw new Error('Team name already exists.')
+            }
+            validateProps(defaultProps, team);
+            // push team to sorted league array
+            league.sortedLeague.push(team);
+        });
 
         // check if table has been rendered - if so, we sort (if possible)
         if (document.querySelector('.league-table table')) {
             lib.createLeague();
         }
+        
+        return league.sortedLeague;
     }
 
 

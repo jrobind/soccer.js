@@ -1,5 +1,5 @@
 describe('deleteTeam()', function() {
-    var team = {name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
+    var team = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     
     beforeEach(function() {
         soccer.sortedLeague.length = 0;

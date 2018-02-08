@@ -1,7 +1,7 @@
 describe('addTeam()', function() {
-    var team = {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
-    var missingProps = {name: 'Merry Argyle', gp: 15, w: 1};
-    var incorrectprops = {name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
+    var team = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
+    var missingProps = [{name: 'Merry Argyle', gp: 15, w: 1}];
+    var incorrectprops = [{name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     
     beforeEach(function() {
         soccer.sortedLeague.length = 0;
@@ -17,13 +17,13 @@ describe('addTeam()', function() {
     it('should return league array containing team object', function() {
         expect(soccer.addTeam(team)).toEqual(jasmine.any(Array));
         soccer.sortedLeague.length = 0;
-        expect(soccer.addTeam(team)[0]).toEqual(jasmine.objectContaining(team));
+        expect(soccer.addTeam(team)[0]).toEqual(jasmine.objectContaining(team[0]));
     });
     
     it('should contain default team properties', function() {
         soccer.addTeam(team);
         
-        expect(soccer.sortedLeague[0]).toEqual(jasmine.objectContaining(team));
+        expect(soccer.sortedLeague[0]).toEqual(jasmine.objectContaining(team[0]));
         
         expect(soccer.sortedLeague[0]).not.toEqual(jasmine.objectContaining({
             name: 'Bilbo Town'
