@@ -103,7 +103,7 @@
         // reverse the table order
         league.sortedLeague.reverse();
         // re-render
-        createLeague(); 
+        lib.createLeague(); 
 
         // check if we have table zones present
         if (league.reversed) {
@@ -126,14 +126,13 @@
 
     function reverseZones() {
         // grab the number of team rows with zone class
-        var zones = document.querySelectorAll('.zone');
+        var zones = document.querySelectorAll('#zone');
         // convert node like array into array we can work with
         var zonesArr = nodeLikeToArray(zones);
 
         // add reverse zone class
         zonesArr.forEach(function(zone) {
-            zone.classList.remove('zone');
-            zone.classList.add('zone-reverse');
+            zone.id = 'zoneReverse';
         });
     }
 
@@ -474,7 +473,7 @@
 
         // check if we have zone positions for the table, if so add them
         if (league.zonePositions) {
-            addZones(league.zonePositions);
+            soccer.addZones(league.zonePositions);
         }
     }
 
@@ -532,7 +531,7 @@
 
         // check if table has been rendered - if so, we sort (if possible)
         if (document.querySelector('.league-table table')) {
-            createLeague();
+            lib.createLeague();
         }
     }
 
@@ -566,7 +565,7 @@
                 var position = Number(teamRow.getAttribute('data'));
 
                 if(position === zone) {
-                    teamRow.classList.add('zone');
+                    teamRow.id = 'zone';
                 }    
             });
         });
@@ -604,8 +603,8 @@
                 }
             });
         });
-        // re-render the table and sort if we can
-        createLeague();
+        // re-render the table
+        lib.createLeague();
     }
 
 
@@ -629,7 +628,7 @@
         // delete from the league
         league.sortedLeague.splice(deleteIndex, 1);
         // re-render the table
-        createLeague();
+        lib.createLeague();
     }
     
     // set to window for now

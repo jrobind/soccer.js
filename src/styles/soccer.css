@@ -3,16 +3,8 @@
 }
 
 .league-table table {
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     border-collapse: collapse;
-}
-
-.zone {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-}
-
-.zone-reverse {
-    border-top:  2px solid rgba(0, 0, 0, 0.6);
 }
 
 .league-table thead tr {
@@ -22,6 +14,7 @@
 
 .league-table tbody td:last-child, .league-table thead th:last-child{
     padding-right: 15px;
+    font-weight: 600;
 }
 
 .league-table tbody td:first-child, .league-table thead th:first-child{
@@ -52,7 +45,7 @@
 .league-table td:nth-of-type(2) {
     font-weight: 600;
     padding-right: 15px;
-    max-width: 150px
+    max-width: 100px
 }
 
 .league-table tfoot tr{
@@ -63,7 +56,7 @@
 
 .league-table tr {
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.2;
 }
 
@@ -122,6 +115,14 @@
 .toggle-arrow-collapse:hover {
     border-bottom: 8px solid rgba(0, 0, 0, 0.9);
     transform: scale(1.35);
+}
+
+#zone {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+#zoneReverse {
+    border-top:  2px solid rgba(0, 0, 0, 0.6);
 }
 
 .minus {
