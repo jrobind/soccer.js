@@ -71,7 +71,7 @@ describe('addTeam()', function() {
     it('should throw Error if team object(s) not passed within an array', function() {
         expect(function(){
             soccer.addTeam(noArray);
-        }).toThrow(new Error('Invalid argument. Team objects must be passed within an array.'));  
+        }).toThrow(new Error('Invalid argument. Data must be passed within an array.'));  
     });
     
     it('should throw Error if incorrect number of properties used', function() {
