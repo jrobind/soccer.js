@@ -44,7 +44,7 @@ describe('updateTeam()', function() {
     it('should throw Error if incorrect team property used', function() {
         expect(function(){
             soccer.updateTeam('Merry Argyle', incorrectPop);
-        }).toThrow(new Error('Incorrect team property passed.'));
+        }).toThrow(new Error('Incorrect team property format passed.'));
     });
     
 });
