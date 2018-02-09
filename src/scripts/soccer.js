@@ -10,6 +10,7 @@
     var lib = {};
     lib.league = [];
     
+    // default object for renderLeague()
     var leagueDefaults = {
         leagueName: 'League',
         footer: false,
@@ -17,6 +18,7 @@
         zones: false
     }
     
+    // default properties for addTeam() and updateTeam()
     var defaultTeamProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
 
 
@@ -155,7 +157,7 @@
     }
 
 
-    function checkInput(team) {
+    function checkName(team) {
         var name;
         typeof team === 'string' ? name = team : name = team.name;
 
@@ -172,17 +174,16 @@
 
     function validateProps(data) {
         var propsValid = true;
-        var defaultProps = defaultTeamProps;
         var dataProps = Object.getOwnPropertyNames(data);
 
         // check default against data props
         dataProps.forEach(function(prop) {
-            if (defaultProps.indexOf(prop) === -1) {
+            if (defaultTeamProps.indexOf(prop) === -1) {
                 propsValid = false;
             } 
         });
 
-        if (!propsValid || dataProps.length !== defaultProps.length) {
+        if (!propsValid || dataProps.length !== defaultTeamProps.length) {
             throw new Error('Incorrect team property format passed.')
         };
     }
@@ -257,7 +258,7 @@
                 team.id = 'lastTeam';
                 team.classList.remove('hide-team');
             } else {
-                team.classList.remove('hide-team');   
+                team.classList.remove('hide-team');
             }
         });   
     }
@@ -531,8 +532,6 @@
         sort();
         removeLeague();
         createTableCaption();
-
-        // setup reverse listeners and handler
         reverseSetup();
 
         // check wether we need to create dropdown toggle
@@ -555,7 +554,7 @@
         
         // loop over array and validate each team obj
         team.forEach(function(team) {
-            var duplicate = checkInput(team); 
+            var duplicate = checkName(team); 
             if (duplicate) {
                 throw new Error('Team name already exists.');
             }
@@ -573,9 +572,8 @@
     }
 
 
-    lib.updateTeam = function(data) {
-        validateProps(data);
-        var teamName = checkInput(data.name);
+    lib.updateTeam = function(name, data) {
+        var teamName = checkName(name);
 
         // if team name not present throw error
         if (!teamName) {
@@ -594,6 +592,9 @@
             dataPropNames.forEach(function(dataProp) {
                 if (dataProp === teamProp) {
                     teamToUpdate[dataProp] = data[dataProp];
+                // if prop is invalid throw error
+                } else if (teamToUpdatePropNames.indexOf(dataProp) === -1) {
+                    throw new Error('Incorrect team property format passed.');
                 }
             });
         });
@@ -603,7 +604,7 @@
 
 
     lib.deleteTeam = function(name) {
-        var teamName = checkInput(name);
+        var teamName = checkName(name);
 
         // if team name not present throw error
         if (!teamName) {
