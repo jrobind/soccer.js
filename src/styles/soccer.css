@@ -30,7 +30,7 @@
 }
 
 .league-table td, .league-table th {
-    padding: 7px 6px;
+    padding: 8px 6px;
 }
 
 .league-table tr:nth-of-type(even) {
@@ -48,7 +48,7 @@
     max-width: 100px
 }
 
-.league-table tfoot tr{
+.league-table tfoot tr {
     padding-top: 10px;
     font-size: 0.75em;
     border: none;
@@ -93,36 +93,26 @@
     margin: auto;
     width: 0;
     height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
 }
 
 .toggle-arrow-default {
-    border-top: 8px solid rgba(0, 0, 0, 0.7);
-    transition: transform 0.2s ease-in;
+    border-top: 9px solid rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in;
 }
 
 .toggle-arrow-collapse {
-    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
-    transition: transform 0.2s ease-in;
-}
-
-.toggle-arrow-default:hover {
-    border-top: 8px solid rgba(0, 0, 0, 0.9);
-    transform: scale(1.35);
-}
-
-.toggle-arrow-collapse:hover {
-    border-bottom: 8px solid rgba(0, 0, 0, 0.9);
-    transform: scale(1.35);
+    border-bottom: 9px solid rgba(0, 0, 0, 0.75);
+    transition: all 0.3s ease-in;
 }
 
 #zone {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
 }
 
 #zoneReverse {
-    border-top:  2px solid rgba(0, 0, 0, 0.6);
+    border-top:  2px solid rgba(0, 0, 0, 0.4);
 }
 
 .minus {
@@ -135,6 +125,10 @@
 
 @media screen and (max-width: 455px) {
     .league-table td, .league-table th {
-        padding: 6px 3px;
+        padding: 6px 2px;
+    }
+    
+    .league-table tr {
+    font-size: 13.5px;
     }
 }
