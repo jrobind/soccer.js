@@ -78,11 +78,12 @@
 }
 
 .toggle {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
+    margin: auto;
     height: 15px;
     width: 50%;
-    margin: auto;
 }
 
 .toggle div {
@@ -94,12 +95,16 @@
 }
 
 .toggle-arrow-default {
-    border-top: 9px solid rgba(0, 0, 0, 0.7);
+    border-top: 9px solid #434343;
+    -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
     transition: all 0.3s ease-in;
 }
 
 .toggle-arrow-collapse {
-    border-bottom: 9px solid rgba(0, 0, 0, 0.75);
+    border-bottom: 9px solid #434343;
+    -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
     transition: all 0.3s ease-in;
 }
 
