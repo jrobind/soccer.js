@@ -11,7 +11,6 @@
     // default object for renderLeague()
     var leagueDefaults = {
         leagueName: 'League',
-        footer: false,
         dropdown: false,
         zones: false
     }
@@ -74,18 +73,6 @@
     } 
 
 
-    function lastUpdated() {
-        var date = new Date();
-        // format the date
-        var sliceGmt = date.toGMTString().slice(0, 25);
-        var lastUpdated = 'Last updated ' + sliceGmt;
-        // cache most recent update time
-        tableState['lastUpdated'] = lastUpdated;
-
-        return lastUpdated;
-    }
-
-
     function addPositions(sorted) {
         // add league position to each team object
         sorted.forEach(function(team, index) {
@@ -101,7 +88,6 @@
 
 
     function reverseTable() {
-        tableState.reverseClicked = true;
         tableState.reversed = !tableState.reversed;
         // reverse the table order
         lib.league.reverse();
@@ -210,13 +196,12 @@
         toggleArrow.addEventListener('click', dropdownToggle);
     }
 
-/*HERE!!!!*/
+
     function hideTeams() {
-        tableState['toggleState'] = 'hidden';
-        // grab all team rows
+        tableState.toggleState = 'hidden';
         var teams = document.querySelectorAll('.league-table table tbody tr');
-        // transform to array so we can work with it
         var unHiddenArr = nodeLikeToArray(teams);
+        // retrieve teams to hide
         var newRows = unHiddenArr.splice(leagueDefaults.dropdown, lib.league.length);
 
         // hide team rows
@@ -315,22 +300,6 @@
         });
     }
     
-    
-    function setFooterTime() {
-        // add most recent update time (but not if we are reversing table)
-        if (!tableState.reversed && !tableState.action && !tableState.reverseClicked) {
-            return lastUpdated();   
-        } else {
-            if (tableState.action) {
-                // if adding, updating, or deleting and in reverse we want to update time
-                tableState.action = !tableState.action;
-                return lastUpdated();
-            } else {
-                return tableState.lastUpdated;   
-            }    
-        }
-    }
-
 
     function createTableCaption() {
         var container = document.querySelector('.league-table');
@@ -428,36 +397,8 @@
             // add goal difference classes
             addGoalDiffClasses(teamRow);
         });
-
-        // check if we need to create the tableFooter
-        if (leagueDefaults.footer) {
-            createTableFooter();   
-        }
     }
 
-
-    function createTableFooter(leagueTable) {
-        var leagueTable = document.querySelector('.league-table table');
-        var footer = document.createElement('tfoot');
-        leagueTable.appendChild(footer);
-
-        // create footer row
-        var footerRow = document.createElement('tr');
-        footer.appendChild(footerRow);
-        // create standard cell for footer row
-        var footerCell = document.createElement('td');
-
-        // add colspan attribute to ensure footer cell stretches entire table
-        footerCell.setAttribute('colspan', '10');
-        footerRow.appendChild(footerCell);
-
-        // create span for footer row cell
-        var footerTime = document.createElement('time');
-        // set the footer time
-        footerTime.innerText = setFooterTime();
-        footerCell.appendChild(footerTime);
-    }
-    
     
     function addZones() {
         var zonePosition = leagueDefaults.zones;
@@ -532,7 +473,6 @@
     lib.addTeam = function(team) {
         // check whether array
         arrayCheck(team); 
-        tableState.action = !tableState.action;
         
         // loop over array and validate each team obj
         team.forEach(function(team) {
@@ -561,8 +501,6 @@
         if (!teamName) {
             throw new Error('Team name does not exist.');
         }
-        
-        tableState.action = !tableState.action;
 
         // find team 
         var teamToUpdate = lib.league.filter(function(sortedTeam) {
@@ -594,8 +532,6 @@
         if (!teamName) {
             throw new Error('Team name does not exist.');
         }
-        
-        tableState.action = !tableState.action;
 
         var deleteIndex;
         var nameEdited = name.toLowerCase();
