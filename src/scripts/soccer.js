@@ -254,12 +254,7 @@
 
         // show hidden teams
         hiddenArr.forEach(function(team, index) {
-            if (index + 1 === hiddenArr.length) {
-                team.id = 'lastTeam';
-                team.classList.remove('hide-team');
-            } else {
-                team.classList.remove('hide-team');
-            }
+            team.classList.remove('hide-team');
         });   
     }
 
