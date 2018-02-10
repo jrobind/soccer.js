@@ -59,7 +59,7 @@
            team['position'] = index + 1;
         });
     }
-
+    
 
     function reverseSetup() {
         var reverseArrow = document.querySelector('#reverseTable');
@@ -415,13 +415,15 @@
 
 
     lib.renderLeague = function(data) {
-        // store table data if present
         if (data) {
             // validate the table data
             validateTableData(data);
         }
-
-        lib.sort();
+        
+        if (!tableState.override) {
+            tableState.override = false;
+            lib.sort();   
+        }
         removeLeague();
         createTableCaption();
         reverseSetup();
@@ -463,11 +465,6 @@
     
     
     lib.sort = function() {
-        if (tableState.override) {
-            tableState.override = false;
-            return;
-        }
-        
         lib.league.sort(function(a, b) {
             // sort teams in descending order (by default) by points
             if (a.pts !== b.pts) {
@@ -516,6 +513,7 @@
         });
         
         lib.renderLeague();
+        return lib.league;
     }
 
 
@@ -544,16 +542,16 @@
     
     lib.override = function(positions) {
         arrayCheck(positions);
-        // set override state
         tableState.override = true;
         var league = lib.league;
+        // format positions in relation to array indexes
         var pos1 = positions[0] -1; 
         var pos2 = positions[1] -1; 
-
         var tempArr = new Array(league.length);
-        // change the teams position property
+        
         for (var i = 0; i < league.length; i ++) {
             if (i === pos1) {
+                // switch place and position prop
                 tempArr[pos2] = league[i];
                 league[i].position = positions[1];
             } else if (i === pos2) {
@@ -566,6 +564,7 @@
 
         lib.league = tempArr;
         lib.renderLeague();
+        return lib.league;
     }
     
     
