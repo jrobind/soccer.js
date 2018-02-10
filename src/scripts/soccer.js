@@ -11,6 +11,7 @@
     // default object for renderLeague()
     var leagueDefaults = {
         leagueName: 'League',
+        image: false,
         dropdown: false,
         zones: false
     }
@@ -164,7 +165,7 @@
     
     
     function setToggleArrowDirection(toggleArrow, data) {
-        if (tableState.toggleState === 'show' && !data) {
+        if (tableState.toggleState === 'show' && !data) { // 'data' represents table creation
             toggleArrow.classList.remove('toggle-arrow-default');
             toggleArrow.classList.add('toggle-arrow-collapse');
         } else {
@@ -198,8 +199,8 @@
 
 
     function hideTeams() {
-        tableState.toggleState = 'hidden';
         var teams = document.querySelectorAll('.league-table table tbody tr');
+        tableState.toggleState = 'hidden';
         var unHiddenArr = nodeLikeToArray(teams);
         // retrieve teams to hide
         var newRows = unHiddenArr.splice(leagueDefaults.dropdown, lib.league.length);
@@ -212,8 +213,8 @@
 
 
     function showTeams() {
-        tableState.toggleState = 'show';
         var hidden = document.querySelectorAll('.hide-team');
+        tableState.toggleState = 'show';
         // transform to array so we can work with it
         var hiddenArr = nodeLikeToArray(hidden);
 
@@ -262,13 +263,10 @@
 
     function formatGoalDiff(team) {
         var plusFormat = '+' + team.gd;
-
         // prepend correct symbols to goal difference 
         if (team.gd > 0) {
-            // remove any uneeded whitespace
             team.gd = team.gd.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
         } else if (team.gd < 0) {
-            // remove any uneeded whitespace
             team.gd = team.gd.toString().replace(/\s+/g, '');
         }
     }
@@ -290,8 +288,8 @@
 
     function removeLeague() {
         var container = document.querySelector('.league-table');
-
         var containerChildNodes = nodeLikeToArray(container.childNodes);
+        
         containerChildNodes.forEach(function(node) {
             if (node.nodeName === 'TABLE' || node.classList.contains('toggle')) {
                 // remove the table element
@@ -306,13 +304,10 @@
         var leagueTable = document.createElement('table');
         var leagueCaption = document.createElement('caption');
 
-        // set caption text
         leagueCaption.innerText = leagueDefaults.leagueName;
-        // append table element and table caption to container div
         container.appendChild(leagueTable);
         leagueTable.appendChild(leagueCaption);
 
-        // create the tablehead
         createTableHead(leagueTable);
     }
 
@@ -323,10 +318,8 @@
         // cell data for header
         var headData = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
 
-        // append table head to table
         var tableHead = document.createElement('thead');
         tableEl.appendChild(tableHead);
-        // create the header row
         var headRow = document.createElement('tr');
         tableHead.appendChild(headRow);
 
@@ -343,7 +336,6 @@
                 // add id for reverse functionality
                 abbrEl.id = 'reverseTable';
                 headCell.appendChild(abbrEl);
-                // append cells to the head row
                 headRow.appendChild(headCell);  
             } else {
                 abbrEl.innerText = headName;
@@ -366,7 +358,6 @@
 
         // iterate over each team object create a table row with relevant team data 
         sorted.forEach(function(team) {
-            // format goal difference
             formatGoalDiff(team);
 
             var teamRow = document.createElement('tr');
@@ -547,7 +538,18 @@
         lib.renderLeague();
     }
     
-    // set to window for now
-    root['soccer'] = lib;
+    
+    /*-------------MODULE DEFINITION------------*/
+    
+    
+    // support for AMD
+    if (typeof root.define === 'function' && define.amd) {
+        root.define('soccer', [], function () {
+            return lib;
+        });
+    } else {
+        // just add 'soccer' to the global object
+        root.soccer = lib;           
+    }
 
 }(this));
