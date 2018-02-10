@@ -11,7 +11,6 @@
     // default object for renderLeague()
     var leagueDefaults = {
         leagueName: 'League',
-        image: false,
         dropdown: false,
         zones: false
     }
@@ -21,26 +20,6 @@
 
 
     /*-------------HELPER FUNCTIONS------------*/
-
-
-    function sort() {
-        lib.league.sort(function(a, b) {
-            // sort teams in descending order (by default) by points
-            if (a.pts !== b.pts) {
-                return b.pts - a.pts;
-            } else {
-                // if points are equal then sort by goal difference
-                return goalDiffCheck(a, b);
-            }
-        });
-
-        addPositions(lib.league);
-
-        // check if the league is reversed
-        if (tableState.reversed) {
-            lib.league.reverse();
-        }
-    }
 
 
     function goalDiffCheck(a, b) {
@@ -444,7 +423,7 @@
             validateTableData(data);
         }
 
-        sort();
+        lib.sort();
         removeLeague();
         createTableCaption();
         reverseSetup();
@@ -483,7 +462,29 @@
         
         return lib.league;
     }
+    
+    
+    lib.sort = function() {
+        lib.league.sort(function(a, b) {
+            // sort teams in descending order (by default) by points
+            if (a.pts !== b.pts) {
+                return b.pts - a.pts;
+            } else {
+                // if points are equal then sort by goal difference
+                return goalDiffCheck(a, b);
+            }
+        });
 
+        addPositions(lib.league);
+
+        // check if the league is reversed
+        if (tableState.reversed) {
+            lib.league.reverse();
+        }
+        
+        return lib.league;
+    }
+    
 
     lib.updateTeam = function(name, data) {
         var teamName = checkName(name);
