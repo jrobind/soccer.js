@@ -411,9 +411,7 @@
     }
 
 
-
     /*------------API FUNCTIONS------------*/
-
 
 
     lib.renderLeague = function(data) {
@@ -465,6 +463,11 @@
     
     
     lib.sort = function() {
+        if (tableState.override) {
+            tableState.override = false;
+            return;
+        }
+        
         lib.league.sort(function(a, b) {
             // sort teams in descending order (by default) by points
             if (a.pts !== b.pts) {
@@ -476,7 +479,6 @@
         });
 
         addPositions(lib.league);
-
         // check if the league is reversed
         if (tableState.reversed) {
             lib.league.reverse();
@@ -540,16 +542,43 @@
     }
     
     
+    lib.override = function(positions) {
+        arrayCheck(positions);
+        // set override state
+        tableState.override = true;
+        var league = lib.league;
+        var pos1 = positions[0] -1; 
+        var pos2 = positions[1] -1; 
+
+        var tempArr = new Array(league.length);
+        // change the teams position property
+        for (var i = 0; i < league.length; i ++) {
+            if (i === pos1) {
+                tempArr[pos2] = league[i];
+                league[i].position = positions[1];
+            } else if (i === pos2) {
+                tempArr[pos1] = league[i];  
+                league[i].position = positions[0];
+            } else {
+                tempArr[i] = league[i];
+            }
+        }
+
+        lib.league = tempArr;
+        lib.renderLeague();
+    }
+    
+    
     /*-------------MODULE DEFINITION------------*/
     
     
     // support for AMD
     if (typeof root.define === 'function' && define.amd) {
-        root.define('soccer', [], function () {
+        root.define('soccer',[], function () {
             return lib;
         });
     } else {
-        // just add 'soccer' to the global object
+        // add 'soccer' to the global object
         root.soccer = lib;           
     }
 
