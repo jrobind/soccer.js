@@ -43,7 +43,7 @@
 
 
     function alphabeticalCheck(a, b) {
-        return b.name < a.name;
+        return b.name.toLowerCase() < a.name.toLowerCase();
     }
 
 
@@ -416,14 +416,15 @@
 
     lib.renderLeague = function(data) {
         if (data) {
+            tableState.override = false;
             // validate the table data
             validateTableData(data);
         }
         
         if (!tableState.override) {
-            tableState.override = false;
             lib.sort();   
-        }
+        } 
+        
         removeLeague();
         createTableCaption();
         reverseSetup();
@@ -443,6 +444,7 @@
     lib.addTeam = function(team) {
         // check whether array
         arrayCheck(team); 
+        tableState.override = false;
         
         // loop over array and validate each team obj
         team.forEach(function(team) {
@@ -465,6 +467,8 @@
     
     
     lib.sort = function() {
+        tableState.override = false;
+        
         lib.league.sort(function(a, b) {
             // sort teams in descending order (by default) by points
             if (a.pts !== b.pts) {
@@ -497,7 +501,8 @@
         var teamToUpdate = lib.league.filter(function(sortedTeam) {
             return sortedTeam.name === name;
         })[0];
-
+        
+        tableState.override = false;
         var dataPropNames = Object.getOwnPropertyNames(data);
         var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
         // update team data
@@ -524,7 +529,7 @@
         if (!teamName) {
             throw new Error('Team name does not exist.');
         }
-
+        tableState.override = false;
         var deleteIndex;
         var nameEdited = name.toLowerCase();
 
