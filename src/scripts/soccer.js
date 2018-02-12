@@ -8,7 +8,7 @@
     var lib = {};
     lib.league = [];
     
-    // default object for renderLeague()
+    // defaults for renderLeague()
     var leagueDefaults = {
         leagueName: 'League',
         dropdown: false,
@@ -19,7 +19,7 @@
     var defaultTeamProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
 
 
-    /*-------------HELPER FUNCTIONS------------*/
+    /*-------------Helper Functions------------*/
 
 
     function goalDiffCheck(a, b) {
@@ -36,7 +36,7 @@
         if (a.gs !== b.gs) {
             return b.gs - a.gs;
         } else {
-            // if total goals scored is equal, then sort alphabetically
+            // if total goals scored are equal, then sort alphabetically
             return alphabeticalCheck(a, b);
         }
     }
@@ -56,7 +56,7 @@
     function addPositions(sorted) {
         // add league position to each team object
         sorted.forEach(function(team, index) {
-           team['position'] = index + 1;
+           team.position = index + 1;
         });
     }
     
@@ -69,7 +69,7 @@
 
     function reverseTable() {
         tableState.reversed = !tableState.reversed;
-        // reverse the table order
+        // reverse the league array team order
         lib.league.reverse();
         lib.renderLeague(); 
     }
@@ -78,8 +78,7 @@
     function reverseZones() {
         var zones = document.querySelectorAll('#zone');
         var zonesArr = nodeLikeToArray(zones);
-
-        // add reverse zone class
+        // set id for zones
         zonesArr.forEach(function(zone) {
             zone.id = 'zoneReverse';
         });
@@ -96,7 +95,7 @@
     }
     
     function arrayCheck(val) {
-        if(!Array.isArray(val)) {
+        if (!Array.isArray(val)) {
             throw new Error('Invalid argument. Data must be passed within an array.');
         }
     }
@@ -121,7 +120,7 @@
         var propsValid = true;
         var dataProps = Object.getOwnPropertyNames(data);
 
-        // check default against data props
+        // check defaults against data props
         dataProps.forEach(function(prop) {
             if (defaultTeamProps.indexOf(prop) === -1) {
                 propsValid = false;
@@ -129,7 +128,7 @@
         });
 
         if (!propsValid || dataProps.length !== defaultTeamProps.length) {
-            throw new Error('Incorrect team property format passed.')
+            throw new Error('Incorrect team property format passed.');
         };
     }
     
@@ -159,20 +158,20 @@
         container.appendChild(toggleRow);
 
         var toggleTd = document.createElement('td');
-        // set td to span all table columns
+        // td to span all table columns
         toggleTd.setAttribute('colspan', '10');
         var toggleDiv = document.createElement('div');
         // set toggle div class
         toggleDiv.setAttribute('class', 'toggle');
 
         var toggleArrow = document.createElement('div');
-        // set arrow direction
-        setToggleArrowDirection(toggleArrow, data)
+        
+        setToggleArrowDirection(toggleArrow, data);
         
         toggleDiv.appendChild(toggleArrow);
         toggleTd.appendChild(toggleDiv);
         toggleRow.appendChild(toggleTd);
-        
+        // set toggle arrow click event listener
         toggleArrow.addEventListener('click', dropdownToggle);
     }
 
@@ -181,10 +180,9 @@
         var teams = document.querySelectorAll('.league-table table tbody tr');
         tableState.toggleState = 'hidden';
         var unHiddenArr = nodeLikeToArray(teams);
-        // retrieve teams to hide
+        // retrieve teams to hide using dropdown value provided
         var newRows = unHiddenArr.splice(leagueDefaults.dropdown, lib.league.length);
-
-        // hide team rows
+        // hide teams
         newRows.forEach(function(teamRow) {
             teamRow.classList.add('hide-team');
         }); 
@@ -194,7 +192,6 @@
     function showTeams() {
         var hidden = document.querySelectorAll('.hide-team');
         tableState.toggleState = 'show';
-        // transform to array so we can work with it
         var hiddenArr = nodeLikeToArray(hidden);
 
         // show hidden teams
@@ -223,13 +220,13 @@
 
 
     function checkToggleState(data) {
-        // if user data is true then we hide specified teams and create dropdown
+        // if 'data' is true, then we hide specified teams and create dropdown
         if (data) {
             createDropdown(data);
             hideTeams();
         // if user data is undefined then we are not initialising the table
         } else {
-            // respect the toggle state 
+            // respect the current toggle state 
             if (tableState.toggleState === 'show') {
                     createDropdown();   
             } else {
@@ -242,7 +239,7 @@
 
     function formatGoalDiff(team) {
         var plusFormat = '+' + team.gd;
-        // prepend correct symbols to goal difference 
+        // prepend correct '+' or '-' symbols to goal difference 
         if (team.gd > 0) {
             team.gd = team.gd.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
         } else if (team.gd < 0) {
@@ -252,18 +249,17 @@
 
 
     function addGoalDiffClasses(teamRow) {    
-        // check goal diff value from td cell
         var tds = nodeLikeToArray(teamRow.cells);
         var gdSpan = tds[8].firstChild;
         var gd = gdSpan.innerText;
-
-        if(gd > 0) {
+        // check goal diff value from td cell and add correct class
+        if (gd > 0) {
             gdSpan.classList.add('plus');  
         } else if (gd < 0) {
             gdSpan.classList.add('minus');
         }
     }
-
+    
 
     function removeLeague() {
         var container = document.querySelector('.league-table');
@@ -282,21 +278,19 @@
         var container = document.querySelector('.league-table');
         var leagueTable = document.createElement('table');
         var leagueCaption = document.createElement('caption');
-
+        // set caption text equal to league name provided
         leagueCaption.innerText = leagueDefaults.leagueName;
         container.appendChild(leagueTable);
         leagueTable.appendChild(leagueCaption);
-
+        
         createTableHead(leagueTable);
     }
 
 
 
     function createTableHead(tableEl) {
-        var headData;
-        // cell data for header
         var headData = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
-
+        
         var tableHead = document.createElement('thead');
         tableEl.appendChild(tableHead);
         var headRow = document.createElement('tr');
@@ -305,13 +299,13 @@
         // create header cells
         headData.forEach(function(headName) {
             var headCell = document.createElement('th');
-            // create abbreviation tag and set inner text
             var abbrEl = document.createElement('abbr');
             // add reverse html character
             if (headName === 'Pos') {
+                // set the reverse arrow direction
                 var arrowUniCode = setArrowDirection();
-                // set arrow icon
                 abbrEl.innerHTML = headName + arrowUniCode;
+                
                 // add id for reverse functionality
                 abbrEl.id = 'reverseTable';
                 headCell.appendChild(abbrEl);
@@ -323,48 +317,43 @@
             }  
         });
 
-        // create table body and table row data for each team and append to table
         createTableData(tableEl);
     }
 
 
     function createTableData(tableEl) {
-        var sorted = lib.league;
+        var league = lib.league;
 
-        // create table body and append to table
         var tableBody = document.createElement('tbody');
         tableEl.appendChild(tableBody);
 
-        // iterate over each team object create a table row with relevant team data 
-        sorted.forEach(function(team) {
+        // iterate over each team object and create a table row with relevant team data 
+        league.forEach(function(team) {
+            var dataArr = [];
             formatGoalDiff(team);
 
             var teamRow = document.createElement('tr');
             // set team position as data attr on table row
             teamRow.setAttribute('data', team.position);
             tableBody.appendChild(teamRow);
-
-            var dataArr = [];
+            // push team data to temp array
             for (var prop in team) {
                 dataArr.push(team[prop]);
             }
-            // place team position at front of team data array (for column headings)
+            // place team position at front of temp array (for column headings)
             var teamPos = dataArr[9];
             dataArr.splice(9, 1);
             dataArr.unshift(teamPos);
 
-            // iterate over team data array and create standard table cells for team data and append to team row
+            // iterate over temp array and create standard table cells for team data and append to team row
             dataArr.forEach(function(teamData) {
                 var standardCell = document.createElement('td');
                 var dataSpan = document.createElement('span');
-                // add team data to span
                 dataSpan.innerText = teamData;
-                // append data span to standard cell and append cell to team row
                 standardCell.appendChild(dataSpan);
                 teamRow.appendChild(standardCell);
             });
 
-            // add goal difference classes
             addGoalDiffClasses(teamRow);
         });
     }
@@ -372,37 +361,34 @@
     
     function addZones() {
         var zonePosition = leagueDefaults.zones;
-        
         // check whether array
         arrayCheck(zonePosition);
-        // current number of positions on table
+        // store current number of positions on table
         var totalPos = document.querySelectorAll('.league-table tbody tr').length;
         
-        // throw error if zone positions are not within a valid range
+        // check that zone positions are within a valid range
         zonePosition.forEach(function(zone) {
             if (zone > totalPos || zone < 0) {
                 throw new Error('Zone positions are not within valid team range.');
             }
         });
 
-        // store zone positons
-        tableState['zonePositions'] = zonePosition;
+        // save zone positions
+        tableState.zonePositions = zonePosition;
 
         var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
         var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
-
-        // set zone class on correct team rows
+        // set id on correct team rows
         zonePosition.forEach(function(zone) {
             numOfTeamsArr.forEach(function(teamRow) {
                 var position = Number(teamRow.getAttribute('data'));
-
-                if(position === zone) {
+                
+                if (position === zone) {
                     teamRow.id = 'zone';
                 }    
             });
         });
-        
-        // if in reversed state we need to reverse zones
+        // if in reversed state we need to reverse zone classes
         if (tableState.reversed) {
             if (tableState.hasOwnProperty('zonePositions')) {
                 reverseZones();
@@ -411,9 +397,15 @@
     }
 
 
-    /*------------API FUNCTIONS------------*/
+    /*------------API Methods------------*/
 
-
+    /**
+     * Renders a league table
+     * Takes an optional table data object
+     * Depending on data passed, the table may be rendered with a dropdown and/or league zones
+     * If no data is passed, then default table values will be used
+     * @param {Object} [data]
+     */
     lib.renderLeague = function(data) {
         if (data) {
             tableState.override = false;
@@ -428,36 +420,39 @@
         removeLeague();
         createTableCaption();
         reverseSetup();
-
+        
         // check wether we need to create dropdown toggle
         if (leagueDefaults.dropdown) {
             checkToggleState(data);
         }
-        
         // check whether we need to add zones
         if (leagueDefaults.zones.length) {
             addZones();
         }
     }
 
-
+    /**
+     * Takes an array of object(s)
+     * Adds team(s) to the league array and auto-updates table if already rendered
+     * Throws error if array is not passed, if team props are incorrect, or team name already exists 
+     * Returns league array
+     * @param {Array} team
+     */
     lib.addTeam = function(team) {
-        // check whether array
         arrayCheck(team); 
         tableState.override = false;
         
-        // loop over array and validate each team obj
+        // iterate over array and validate team obj(s)
         team.forEach(function(team) {
             var duplicate = checkName(team); 
             if (duplicate) {
                 throw new Error('Team name already exists.');
             }
             validateProps(team);
-            // push team to sorted league array
+            // push team to league array
             lib.league.push(team);
         });
-
-        // check if table has been rendered - if so, we sort (if possible)
+        // check if table has been rendered - if so, we sort and update
         if (document.querySelector('.league-table table')) {
             lib.renderLeague();
         }
@@ -465,7 +460,13 @@
         return lib.league;
     }
     
-    
+    /**
+     * Sorts league array containing unsorted teams
+     * Teams are sorted by points first. If points are equal then by goal difference,
+     * if goal difference is equal then by total goals scored. If goals scored are equal
+     * then teams are sorted alphabetically
+     * Returns sorted league array
+     */
     lib.sort = function() {
         tableState.override = false;
         
@@ -478,17 +479,28 @@
                 return goalDiffCheck(a, b);
             }
         });
-
+        // add league positions to each team
         addPositions(lib.league);
-        // check if the league is reversed
+        
         if (tableState.reversed) {
+            // if reveresed state is true, then we reverse the sorted league
             lib.league.reverse();
         }
         
         return lib.league;
     }
     
-
+    /**
+     * Takes a string for team name and an object for team values to be updated
+     * Updates individual team values
+     * Updates can be applied to single or multiple team values
+     * Throws error if team name already exists, or incorrect team property supplied 
+     * Returns sorted league array
+     * @param {String} name
+     * @param {Object} data
+     
+     * To-do: allow multiple teams to be updated at once
+     */
     lib.updateTeam = function(name, data) {
         var teamName = checkName(name);
 
@@ -497,7 +509,7 @@
             throw new Error('Team name does not exist.');
         }
 
-        // find team 
+        // find specifed team 
         var teamToUpdate = lib.league.filter(function(sortedTeam) {
             return sortedTeam.name === name;
         })[0];
@@ -510,7 +522,7 @@
             dataPropNames.forEach(function(dataProp) {
                 if (dataProp === teamProp) {
                     teamToUpdate[dataProp] = data[dataProp];
-                // if prop is invalid throw error
+                // if prop provided is invalid, then throw error
                 } else if (teamToUpdatePropNames.indexOf(dataProp) === -1) {
                     throw new Error('Incorrect team property format passed.');
                 }
@@ -521,10 +533,14 @@
         return lib.league;
     }
 
-
+    /**
+     * Removes individual teams
+     * Throws error if team name does not exist
+     * Returns sorted league array
+     * @param {String} name
+     */
     lib.deleteTeam = function(name) {
         var teamName = checkName(name);
-
         // if team name not present throw error
         if (!teamName) {
             throw new Error('Team name does not exist.');
@@ -538,13 +554,24 @@
                 deleteIndex = index;
             };
         });
-
-        // delete from the league
+        // remove team from the league
         lib.league.splice(deleteIndex, 1);
+        
         lib.renderLeague();
+        return lib.league;
     }
     
-    
+    /**
+     * Swaps two specified teams in the league overriding sort mechanism
+     * Positions should be an array of 2 numbers representing the team positions that
+     * are to be swapped
+     * Once swapped the table will be re-rendered
+     * Swapped teams are revereted back to original sorted state once any updates to the
+     * league are made
+     * Throws error if array is not passed
+     * Returns sorted league array
+     * @param {Array} positions
+     */
     lib.override = function(positions) {
         arrayCheck(positions);
         tableState.override = true;
@@ -553,7 +580,7 @@
         var pos1 = positions[0] -1; 
         var pos2 = positions[1] -1; 
         var tempArr = new Array(league.length);
-        
+        // swap team positions
         for (var i = 0; i < league.length; i ++) {
             if (i === pos1) {
                 // switch place and position prop
@@ -566,14 +593,14 @@
                 tempArr[i] = league[i];
             }
         }
-
+        // set array containing swapped teams as league array
         lib.league = tempArr;
         lib.renderLeague();
         return lib.league;
     }
     
     
-    /*-------------MODULE DEFINITION------------*/
+    /*-------------Module Definition------------*/
     
     
     // support for AMD
