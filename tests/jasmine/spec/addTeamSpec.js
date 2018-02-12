@@ -16,6 +16,7 @@ describe('addTeam()', function() {
         
         expect(soccer.league.length).toBe(1);
         expect(soccer.league[0]).toEqual(jasmine.any(Object));
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(team[0]));
     });
     
     it('should add multiple team objects', function() {
@@ -24,6 +25,8 @@ describe('addTeam()', function() {
         expect(soccer.league.length).toBe(2);
         expect(soccer.league[0]).toEqual(jasmine.any(Object));
         expect(soccer.league[1]).toEqual(jasmine.any(Object));
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(multipleTeams[0]));
+        expect(soccer.league[1]).toEqual(jasmine.objectContaining(multipleTeams[1]));
     });
     
     it('should return league array containing team object', function() {
