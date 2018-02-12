@@ -26,11 +26,31 @@ describe('override()', function() {
         expect(soccer.league[0].position).toBe(1);
         expect(soccer.league[1].position).toBe(2);
         
-        // remove postion prop
         soccer.league.forEach(function(team) {
             delete team.position
         });
         
+    });
+    
+    it('should return league array', function() {
+        soccer.addTeam(teams);
+        
+        expect(soccer.override([1, 2])).toEqual(jasmine.any(Array));
+        
+        soccer.league.forEach(function(team) {
+            delete team.position
+        });
+    });
+    
+    it ('should invoke renderLeague()', function() {
+        soccer.addTeam(teams);
+        soccer.override([1, 2]);
+        
+        expect(soccer.renderLeague).toHaveBeenCalled();
+        
+        soccer.league.forEach(function(team) {
+            delete team.position
+        });
     });
     
     it('should throw Error if positions not passed within an array', function() {
@@ -38,6 +58,5 @@ describe('override()', function() {
             soccer.override(1, 2);
         }).toThrow(new Error('Invalid argument. Data must be passed within an array.'));  
     });
-    
     
 });

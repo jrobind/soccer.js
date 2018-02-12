@@ -61,4 +61,10 @@ describe('sort()', function() {
         expect(soccer.league[2].position).toBe(3);
     });
     
+    it('should return league array', function() {
+        soccer.addTeam(points);
+        
+        expect(soccer.sort()).toEqual(jasmine.any(Array));
+    });
+    
 });

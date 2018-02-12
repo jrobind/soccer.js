@@ -20,6 +20,10 @@ describe('deleteTeam()', function() {
         expect(soccer.renderLeague).toHaveBeenCalled();
     });
     
+    it('should return league array', function() {
+        expect(soccer.deleteTeam('Frodo City')).toEqual(jasmine.any(Array));
+    });
+    
     it('should throw Error if team name does not exist', function() {
         expect(function(){
             soccer.updateTeam('Frodo Rovers');
