@@ -1,5 +1,5 @@
 (function(root) {
-    'use strict'
+    'use strict';
     
     // table data cache 
     var tableState = {};
@@ -13,7 +13,7 @@
         leagueName: 'League',
         dropdown: false,
         zones: false
-    }
+    };
     
     // default properties for addTeam() and updateTeam()
     var defaultTeamProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
@@ -102,8 +102,7 @@
 
 
     function checkName(team) {
-        var name;
-        typeof team === 'string' ? name = team : name = team.name;
+        var name = typeof team === 'string' ? team : team.name;
 
         // check whether team name already exits
         var duplicate = lib.league.map(function(team) {
@@ -129,7 +128,7 @@
 
         if (!propsValid || dataProps.length !== defaultTeamProps.length) {
             throw new Error('Incorrect team property format passed.');
-        };
+        }
     }
     
     
@@ -346,7 +345,9 @@
             tableBody.appendChild(teamRow);
             // push team data to temp array
             for (var prop in team) {
-                dataArr.push(team[prop]);
+                if (team.hasOwnProperty(prop)) {
+                    dataArr.push(team[prop]);
+                }
             }
             // place team position at front of temp array (for column headings)
             var teamPos = dataArr[9];
@@ -437,7 +438,7 @@
         if (leagueDefaults.zones.length) {
             addZones();
         }
-    }
+    };
 
     /**
      * Takes an array of object(s)
@@ -463,7 +464,7 @@
         
         checkForTable();
         return lib.league;
-    }
+    };
     
     /**
      * Sorts league array containing unsorted teams
@@ -493,7 +494,7 @@
         }
         
         return lib.league;
-    }
+    };
     
     /**
      * Takes a string for team name and an object for team values to be updated
@@ -536,7 +537,7 @@
         
         checkForTable();
         return lib.league;
-    }
+    };
 
     /**
      * Removes individual teams
@@ -557,14 +558,14 @@
         lib.league.forEach(function(sortedTeam, index) {
             if (sortedTeam.name.toLowerCase() === nameEdited) {
                 deleteIndex = index;
-            };
+            }
         });
         // remove team from the league
         lib.league.splice(deleteIndex, 1);
         
         checkForTable();
         return lib.league;
-    }
+    };
     
     /**
      * Swaps two specified teams in the league overriding sort mechanism
@@ -602,7 +603,7 @@
         lib.league = tempArr;
         checkForTable();
         return lib.league;
-    }
+    };
     
     
     /*-------------Module Definition------------*/
