@@ -1,0 +1,27 @@
+{
+  "name": "soccer",
+  "version": "1.0.0",
+  "description": "A Javascript micro-library for building responsive soccer league tables",
+  "main": "src/scripts/soccer.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JrobinWebDev/soccer.js.git"
+  },
+  "keywords": [
+    "soccer",
+    "league",
+    "table"
+  ],
+  "author": "James Robinson <jrobind@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JrobinWebDev/soccer.js/issues"
+  },
+  "homepage": "https://github.com/JrobinWebDev/soccer.js#readme"
+}
