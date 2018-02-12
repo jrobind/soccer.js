@@ -1,6 +1,7 @@
 describe('addTeam()', function() {
     var team = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
-    var multipleTeams = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, {name: 'Frodo City', gp: 10, w: 3, d: 2, l: 5, gs: 15, a: 14, gd: -1, pts: 13}];
+    var multipleTeams = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+                         {name: 'Frodo City', gp: 10, w: 3, d: 2, l: 5, gs: 15, a: 14, gd: -1, pts: 13}];
     var missingProps = [{name: 'Merry Argyle', gp: 15, w: 1}];
     var incorrectprops = [{name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     var noArray = {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
@@ -35,7 +36,6 @@ describe('addTeam()', function() {
         soccer.addTeam(team);
         
         expect(soccer.league[0]).toEqual(jasmine.objectContaining(team[0]));
-        
         expect(soccer.league[0]).not.toEqual(jasmine.objectContaining({
             name: 'Bilbo Town'
         }));
@@ -47,6 +47,7 @@ describe('addTeam()', function() {
             soccer.league.length = 0;
             spyOn(soccer, 'renderLeague');
         });
+        
         
         it('should call renderLeague() only when a table has been rendered', function() {
             var container = document.createElement('div');

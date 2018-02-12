@@ -1,11 +1,16 @@
 describe('sort()', function() {
-    var points = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 5}, {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 20}];
-    
-    var goalDiff = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: 1, pts: 11}, {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: 4, pts: 11}, {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -3, pts: 11}];
-    
-    var goalsScored = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 4, a: 4, gd: -6, pts: 11}, {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 3, a: 4, gd: -6, pts: 11}];
-    
-    var alphabetically = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, {name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
+    var points = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 5}, 
+                  {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+                  {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 20}];
+    var goalDiff = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: 1, pts: 11}, 
+                    {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: 4, pts: 11}, 
+                    {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -3, pts: 11}];
+    var goalsScored = [{name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+                       {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 4, a: 4, gd: -6, pts: 11}, 
+                       {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 3, a: 4, gd: -6, pts: 11}];
+    var alphabetically = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+                          {name: 'Rohan Rovers', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+                          {name: 'Frodo City', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
     
     beforeEach(function() {
         // remove position
