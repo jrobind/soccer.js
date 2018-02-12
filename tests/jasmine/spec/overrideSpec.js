@@ -43,17 +43,6 @@ describe('override()', function() {
         });
     });
     
-    it ('should invoke renderLeague()', function() {
-        soccer.addTeam(teams);
-        soccer.override([1, 2]);
-        
-        expect(soccer.renderLeague).toHaveBeenCalled();
-        
-        soccer.league.forEach(function(team) {
-            delete team.position;
-        });
-    });
-    
     it('should throw Error if positions not passed within an array', function() {
         expect(function(){
             soccer.override(1, 2);

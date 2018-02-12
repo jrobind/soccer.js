@@ -13,12 +13,6 @@ describe('deleteTeam()', function() {
         
         expect(soccer.league.length).toBe(0);
     });
-
-    it ('should invoke renderLeague()', function() {
-        soccer.deleteTeam('Frodo City');
-        
-        expect(soccer.renderLeague).toHaveBeenCalled();
-    });
     
     it('should return league array', function() {
         expect(soccer.deleteTeam('Frodo City')).toEqual(jasmine.any(Array));

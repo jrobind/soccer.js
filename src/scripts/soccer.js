@@ -142,6 +142,14 @@
     }
     
     
+    function checkForTable() {
+        if (document.querySelector('.league-table table')) {
+            // if table is present then re-render
+            lib.renderLeague();
+        }
+    }
+    
+    
     function setToggleArrowDirection(toggleArrow, data) {
         if (tableState.toggleState === 'show' && !data) { // 'data' represents table creation
             toggleArrow.classList.remove('toggle-arrow-default');
@@ -452,11 +460,8 @@
             // push team to league array
             lib.league.push(team);
         });
-        // check if table has been rendered - if so, we sort and update
-        if (document.querySelector('.league-table table')) {
-            lib.renderLeague();
-        }
         
+        checkForTable();
         return lib.league;
     }
     
@@ -529,7 +534,7 @@
             });
         });
         
-        lib.renderLeague();
+        checkForTable();
         return lib.league;
     }
 
@@ -557,7 +562,7 @@
         // remove team from the league
         lib.league.splice(deleteIndex, 1);
         
-        lib.renderLeague();
+        checkForTable();
         return lib.league;
     }
     
@@ -595,7 +600,7 @@
         }
         // set array containing swapped teams as league array
         lib.league = tempArr;
-        lib.renderLeague();
+        checkForTable();
         return lib.league;
     }
     

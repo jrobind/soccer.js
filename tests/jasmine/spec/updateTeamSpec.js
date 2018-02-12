@@ -23,12 +23,6 @@ describe('updateTeam()', function() {
         expect(soccer.league[0]).toEqual(jasmine.objectContaining(updateAll));
     });
     
-    it ('should invoke renderLeague()', function() {
-        soccer.updateTeam('Merry Argyle', updatePts);
-        
-        expect(soccer.renderLeague).toHaveBeenCalled();
-    });
-    
     it('should return league array', function() {
         expect(soccer.updateTeam('Merry Argyle', updatePts)).toEqual(jasmine.any(Array));
     });

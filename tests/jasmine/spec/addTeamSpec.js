@@ -40,34 +40,6 @@ describe('addTeam()', function() {
             name: 'Bilbo Town'
         }));
     });
-   
-    describe('when to call renderLeague()', function() {
-        
-        beforeEach(function() {
-            soccer.league.length = 0;
-            spyOn(soccer, 'renderLeague');
-        });
-        
-        
-        it('should call renderLeague() only when a table has been rendered', function() {
-            var container = document.createElement('div');
-            container.setAttribute('class', 'league-table');
-            var table = document.createElement('table');
-            container.appendChild(table);
-            document.body.appendChild(container);
-            
-            soccer.addTeam(team);
-            
-            expect(soccer.renderLeague).toHaveBeenCalled();
-            
-            document.body.removeChild(container);
-        });
-        
-        it('should not call createLeague() when no table has been rendered', function() {
-            soccer.addTeam(team);
-            expect(soccer.renderLeague).not.toHaveBeenCalled();
-        });
-    });
     
     it('should throw Error if team object(s) not passed within an array', function() {
         expect(function(){
