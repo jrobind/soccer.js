@@ -129,7 +129,11 @@
         padding: 6px 2px;
     }
     
+    .league-table td:nth-of-type(2) {
+        padding-right: 10px;
+    }
+
     .league-table tr {
-    font-size: 13.5px;
+        font-size: 13.5px;
     }
 }
