@@ -149,6 +149,15 @@
     }
     
     
+    function validateOverride(toSwap) {
+        arrayCheck(toSwap);
+        // check number of positions passed
+        if (toSwap.length > 2) {
+            throw new Error('Only two teams can be swapped at a time.');
+        }
+    }
+    
+    
     function checkForTable() {
         if (document.querySelector('.league-table table')) {
             // if table is present then re-render
@@ -449,7 +458,7 @@
      * Takes an array of object(s)
      * Adds team(s) to the league array and auto-updates table if already rendered
      * Throws error if array is not passed, if team props are incorrect, or team name already exists 
-     * Returns league array
+     * Returns unsorted league array
      * @param {Array} team
      */
     lib.addTeam = function(team) {
@@ -573,8 +582,8 @@
     
     /**
      * Swaps two specified teams and re-renders league, overriding sort mechanism
-     * Positions should be an array of 2 numbers representing the team positions that
-     * are to be swapped
+     * Positions should be an array of 2 numbers representing the team positions
+     * to be swapped
      * Teams can be swapped even if table is reversed
      * Swapped teams are revereted back to original sorted state once any updates to the
      * league are made
@@ -583,20 +592,24 @@
      * @param {Array} positions
      */
     lib.override = function(toSwap) {
-        arrayCheck(toSwap);
-        
-        if (toSwap.length > 2) {
-            throw new Error('Only two teams can be swapped at a time.');
-        }
-        
         tableState.override = true;
+        validateOverride(toSwap);
+        
         var swap1 = {};
         var swap2 = {};
         
         // add positions if not present
         if (!checkForPositions()) {
             addPositions();  
-        } 
+        }
+        // check positions passed are valid
+        var valid = lib.league.filter(function(team) {
+            return toSwap[0] === team.position || toSwap[1] === team.position;
+        });
+        
+        if (valid.length !== 2) {
+            throw new Error('Invalid team position(s).');
+        }
         // store teams to be swapped, store index, and set new position value
         lib.league.forEach(function(team, index) {
             if (toSwap[0] === team.position) {
