@@ -53,14 +53,22 @@
     } 
 
 
-    function addPositions(sorted) {
-        // add league position to each team object
-        sorted.forEach(function(team, index) {
-           team.position = index + 1;
+    function addPositions() {
+        // add league position to each team
+        lib.league.forEach(function(team, index) {
+                team.position = index + 1;   
         });
     }
     
-
+    
+    function checkForPositions() {
+        // check if teams have position property
+        return lib.league.some(function(team) {
+            return team.position;
+        });
+    }
+    
+    
     function reverseSetup() {
         var reverseArrow = document.querySelector('#reverseTable');
         reverseArrow.addEventListener('click', reverseTable);
@@ -455,7 +463,6 @@
                 throw new Error('Team name already exists.');
             }
             validateProps(team);
-            // push team to league array
             lib.league.push(team);
         });
         
@@ -482,8 +489,8 @@
                 return goalDiffCheck(a, b);
             }
         });
-        // add league positions to each team
-        addPositions(lib.league);
+        
+        addPositions();
         
         if (tableState.reversed) {
             // if reveresed state is true, then we reverse the sorted league
@@ -565,10 +572,10 @@
     };
     
     /**
-     * Swaps two specified teams in the league overriding sort mechanism
+     * Swaps two specified teams and re-renders league, overriding sort mechanism
      * Positions should be an array of 2 numbers representing the team positions that
      * are to be swapped
-     * Once swapped the table will be re-rendered
+     * Teams can be swapped even if table is reversed
      * Swapped teams are revereted back to original sorted state once any updates to the
      * league are made
      * Throws error if array is not passed
@@ -578,26 +585,34 @@
     lib.override = function(positions) {
         arrayCheck(positions);
         tableState.override = true;
-        var league = lib.league;
-        // format positions in relation to array indexes
-        var pos1 = positions[0] -1; 
-        var pos2 = positions[1] -1; 
-        var tempArr = new Array(league.length);
-        // swap team positions
-        for (var i = 0; i < league.length; i ++) {
-            if (i === pos1) {
-                // switch place and position prop
-                tempArr[pos2] = league[i];
-                league[i].position = positions[1];
-            } else if (i === pos2) {
-                tempArr[pos1] = league[i];  
-                league[i].position = positions[0];
-            } else {
-                tempArr[i] = league[i];
+        var pos1 = {};
+        var pos2 = {};
+        
+        // add positions if not present
+        if (!checkForPositions()) {
+            addPositions();  
+        } 
+        // store teams to be swapped, store index, and set new position value
+        lib.league.forEach(function(team, index) {
+            if (positions[0] === team.position) {
+                team.position = positions[1];
+                pos1.index = index;
+                pos1.team = team;  
+            } else if (positions[1] === team.position) {
+                team.position = positions[0];
+                pos2.index = index;
+                pos2.team = team;  
             }
-        }
-        // set array containing swapped teams as league array
-        lib.league = tempArr;
+        });
+        // swap teams
+        lib.league.forEach(function(team, index, arr) {
+            if (index === pos1.index) {
+                arr[index] = pos2.team;
+            } else if (index === pos2.index) {
+                arr[index] = pos1.team;
+            } 
+        });
+        
         checkForTable();
         return lib.league;
     };
