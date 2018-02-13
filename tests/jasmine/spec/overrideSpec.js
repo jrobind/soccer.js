@@ -49,4 +49,16 @@ describe('override()', function() {
         }).toThrow(new Error('Invalid argument. Data must be passed within an array.'));  
     });
     
+    it('should throw Error if more than two positions passed within an array', function() {
+        expect(function(){
+            soccer.override([1, 2, 3]);
+        }).toThrow(new Error('Only two teams can be swapped at a time.'));  
+    });
+    
+    it('should throw Error if positions are invalid', function() {
+        expect(function(){
+            soccer.override([23, 200]);
+        }).toThrow(new Error('Invalid team position(s).'));  
+    });
+
 });
