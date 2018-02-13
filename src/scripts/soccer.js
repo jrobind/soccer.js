@@ -582,11 +582,16 @@
      * Returns sorted league array
      * @param {Array} positions
      */
-    lib.override = function(positions) {
-        arrayCheck(positions);
+    lib.override = function(toSwap) {
+        arrayCheck(toSwap);
+        
+        if (toSwap.length > 2) {
+            throw new Error('Only two teams can be swapped at a time.');
+        }
+        
         tableState.override = true;
-        var pos1 = {};
-        var pos2 = {};
+        var swap1 = {};
+        var swap2 = {};
         
         // add positions if not present
         if (!checkForPositions()) {
@@ -594,22 +599,22 @@
         } 
         // store teams to be swapped, store index, and set new position value
         lib.league.forEach(function(team, index) {
-            if (positions[0] === team.position) {
-                team.position = positions[1];
-                pos1.index = index;
-                pos1.team = team;  
-            } else if (positions[1] === team.position) {
-                team.position = positions[0];
-                pos2.index = index;
-                pos2.team = team;  
+            if (toSwap[0] === team.position) {
+                team.position = toSwap[1];
+                swap1.index = index;
+                swap1.team = team;  
+            } else if (toSwap[1] === team.position) {
+                team.position = toSwap[0];
+                swap2.index = index;
+                swap2.team = team;  
             }
         });
         // swap teams
         lib.league.forEach(function(team, index, arr) {
-            if (index === pos1.index) {
-                arr[index] = pos2.team;
-            } else if (index === pos2.index) {
-                arr[index] = pos1.team;
+            if (index === swap1.index) {
+                arr[index] = swap2.team;
+            } else if (index === swap2.index) {
+                arr[index] = swap1.team;
             } 
         });
         
