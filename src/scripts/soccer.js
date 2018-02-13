@@ -382,9 +382,6 @@
             }
         });
 
-        // save zone positions
-        tableState.zonePositions = zonePosition;
-
         var numOfTeamsNode = document.querySelectorAll('.league-table table tbody tr');
         var numOfTeamsArr = nodeLikeToArray(numOfTeamsNode);
         // set id on correct team rows
@@ -399,7 +396,7 @@
         });
         // if in reversed state we need to reverse zone classes
         if (tableState.reversed) {
-            if (tableState.hasOwnProperty('zonePositions')) {
+            if (leagueDefaults.zones) {
                 reverseZones();
             }   
         }
