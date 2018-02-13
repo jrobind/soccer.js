@@ -8,8 +8,8 @@
 }
 
 .league-table thead tr {
-    background-color: #f4f4f4;
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+    background-color: #F4F4F4;
+    border-bottom: 0.6px solid #BDBDBD;
 }
 
 .league-table tbody td:last-child, .league-table thead th:last-child{
@@ -34,7 +34,7 @@
 }
 
 .league-table tr:nth-of-type(even) {
-    background-color: #fbfbfb;
+    background-color: #FAFAFA;
 }
 
 .league-table td:nth-last-of-type(-n+8) {
@@ -55,7 +55,7 @@
 }
 
 .league-table tr {
-    border-bottom: 0.6px solid #bdbdbd;
+    border-bottom: 0.6px solid #BDBDBD;
     font-size: 14.5px;
     line-height: 16px;
 }
@@ -109,11 +109,11 @@
 }
 
 #zone {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 2px solid #909090;
 }
 
 #zoneReverse {
-    border-top:  2px solid rgba(0, 0, 0, 0.4);
+    border-top:  2px solid #909090;
 }
 
 .minus {
