@@ -159,11 +159,7 @@
     
     
     function findTable() {
-        if (document.querySelector('.league-table table')) {
-            return true;
-        } else {
-            return false;
-        }
+        return Boolean(document.querySelector('.league-table table'));
     }
     
     
