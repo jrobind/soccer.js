@@ -141,6 +141,7 @@
     
     
     function validateTableData(data) {
+        // if data is passed then set as new values on defaults object
         for(var prop in data) {
             if (leagueDefaults.hasOwnProperty(prop)) {
                 leagueDefaults[prop] = data[prop];
@@ -401,7 +402,6 @@
     
     function addZones() {
         var zonePosition = leagueDefaults.zones;
-        // check whether array
         arrayCheck(zonePosition);
         // store current number of positions on table
         var totalPos = document.querySelectorAll('.league-table tbody tr').length;
@@ -512,7 +512,6 @@
         addPositions();
         
         if (tableState.reversed) {
-            // if reveresed state is true, then we reverse the sorted league
             lib.league.reverse();
         }
         
