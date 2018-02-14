@@ -158,10 +158,28 @@
     }
     
     
-    function checkForTable() {
+    function findTable() {
         if (document.querySelector('.league-table table')) {
-            // if table is present then re-render
-            lib.renderLeague();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    
+    function sortAndRenderCheck() {
+        if (findTable()) {
+            // check our override state
+            if (!tableState.override) {
+                lib.sort(); 
+                lib.renderLeague();
+            } else {
+                lib.renderLeague();
+            }
+        } else {
+            if (!tableState.override) {
+                lib.sort();   
+            } 
         }
     }
     
@@ -422,6 +440,7 @@
 
     /*------------API Methods------------*/
 
+    
     /**
      * Renders a league table
      * Takes an optional table data object
@@ -436,14 +455,9 @@
             validateTableData(data);
         }
         
-        if (!tableState.override) {
-            lib.sort();   
-        } 
-        
         removeLeague();
         createTableCaption();
         reverseSetup();
-        
         // check wether we need to create dropdown toggle
         if (leagueDefaults.dropdown) {
             checkToggleState(data);
@@ -458,7 +472,7 @@
      * Takes an array of object(s)
      * Adds team(s) to the league array and auto-updates table if already rendered
      * Throws error if array is not passed, if team props are incorrect, or team name already exists 
-     * Returns unsorted league array
+     * Returns sorted league array
      * @param {Array} team
      */
     lib.addTeam = function(team) {
@@ -475,12 +489,12 @@
             lib.league.push(team);
         });
         
-        checkForTable();
+        sortAndRenderCheck();
         return lib.league;
     };
     
     /**
-     * Sorts league array containing unsorted teams
+     * Sorts league array and adds league positions to team objects once sorted 
      * Teams are sorted by points first. If points are equal then by goal difference,
      * if goal difference is equal then by total goals scored. If goals scored are equal
      * then teams are sorted alphabetically
@@ -504,6 +518,11 @@
         if (tableState.reversed) {
             // if reveresed state is true, then we reverse the sorted league
             lib.league.reverse();
+        }
+        
+        // if table is rendered we need to re-render the table
+        if (findTable()) {
+            lib.renderLeague();
         }
         
         return lib.league;
@@ -548,7 +567,7 @@
             });
         });
         
-        checkForTable();
+        sortAndRenderCheck();
         return lib.league;
     };
 
@@ -576,7 +595,7 @@
         // remove team from the league
         lib.league.splice(deleteIndex, 1);
         
-        checkForTable();
+        sortAndRenderCheck();
         return lib.league;
     };
     
@@ -588,7 +607,7 @@
      * Swapped teams are revereted back to original sorted state once any updates to the
      * league are made
      * Throws error if array is not passed
-     * Returns sorted league array
+     * Returns unsorted league array
      * @param {Array} positions
      */
     lib.override = function(toSwap) {
@@ -631,7 +650,7 @@
             } 
         });
         
-        checkForTable();
+        sortAndRenderCheck();
         return lib.league;
     };
     

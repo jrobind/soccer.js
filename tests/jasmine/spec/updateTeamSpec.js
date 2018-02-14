@@ -7,6 +7,7 @@ describe('updateTeam()', function() {
     beforeEach(function() {
         soccer.league.length = 0;
         spyOn(soccer, 'renderLeague');
+        spyOn(soccer, 'sort');
         soccer.addTeam(team);
     });
 

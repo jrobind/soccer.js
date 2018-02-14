@@ -8,6 +8,7 @@ describe('addTeam()', function() {
     
     beforeEach(function() {
         soccer.league.length = 0;
+        spyOn(soccer, 'sort');
     });
     
     
