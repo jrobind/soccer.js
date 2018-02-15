@@ -15,9 +15,8 @@
         zones: false
     };
     
-    // default properties for addTeam() and updateTeam()
-    var defaultTeamProps = ['name', 'gp', 'w', 'd', 'l', 'gs', 'a', 'gd', 'pts'];
-
+    // default properties for updateTeam()
+//    var defaultTeamProps = ['name', 'played', 'won', 'drawn', 'lost', 'scored', 'conceded', 'goalDiff', 'points'];
 
     /*-------------Helper Functions------------*/
 
@@ -119,30 +118,36 @@
             return sortedName === name;
         });
 
-        return Boolean(duplicate.length);
+        return Boolean(duplicate.length); 
     }
 
 
-    function validateProps(data) {
-        var propsValid = true;
-        var dataProps = Object.getOwnPropertyNames(data);
-
-        // check defaults against data props
-        dataProps.forEach(function(prop) {
-            if (defaultTeamProps.indexOf(prop) === -1) {
-                propsValid = false;
-            } 
-        });
-
-        if (!propsValid || dataProps.length !== defaultTeamProps.length) {
-            throw new Error('Incorrect team property format passed.');
-        }
+//    function validateProps(data) {
+//        var propsValid = true;
+//        var dataProps = Object.getOwnPropertyNames(data);
+//
+//        // check defaults against data props
+//        dataProps.forEach(function(prop) {
+//            if (defaultTeamProps.indexOf(prop) === -1) {
+//                propsValid = false;
+//            } 
+//        });
+//
+//        if (!propsValid || dataProps.length !== defaultTeamProps.length) {
+//            throw new Error('Incorrect team property format passed.');
+//        }
+//    }
+    
+    function calculateGoalDifference(team) {
+        team.goalDiff = team.scored - team.conceded;
+        
+        return team;
     }
     
     
     function validateTableData(data) {
         // if data is passed then set as new values on defaults object
-        for(var prop in data) {
+        for (var prop in data) {
             if (leagueDefaults.hasOwnProperty(prop)) {
                 leagueDefaults[prop] = data[prop];
             }
@@ -326,7 +331,6 @@
     }
 
 
-
     function createTableHead(tableEl) {
         var headData = ['Pos', 'Team', 'GP', 'W', 'D', 'L', 'F', 'A', 'GD', 'Pts'];
         
@@ -471,20 +475,29 @@
      * Returns sorted league array
      * @param {Array} team
      */
-    lib.addTeam = function(team) {
-        arrayCheck(team); 
+    lib.addTeam = function(teams) {
+        arrayCheck(teams); 
         tableState.override = false;
-        
-        // iterate over array and validate team obj(s)
-        team.forEach(function(team) {
-            var duplicate = checkName(team); 
-            if (duplicate) {
-                throw new Error('Team name already exists.');
+        // iterate over names and create team obj(s)
+        teams.forEach(function(team, index, arr) {
+            if (checkName(team)) {
+                throw new Error('Team name already exists.');    
             }
-            validateProps(team);
-            lib.league.push(team);
+            
+            arr[index] = {
+                name: team,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                scored: 0,
+                conceded: 0,
+                goalDiff: 0,
+                points: 0
+            }
+            lib.league.push(arr[index]);
         });
-        
+
         sortAndRenderCheck();
         return lib.league;
     };
@@ -534,34 +547,44 @@
      
      * To-do: allow multiple teams to be updated at once
      */
-    lib.updateTeam = function(name, data) {
-        var teamName = checkName(name);
+    lib.updateTeam = function(data) {
+        data.forEach(function(team) {
+            var teamName = checkName(team);
 
-        // if team name not present throw error
-        if (!teamName) {
-            throw new Error('Team name does not exist.');
-        }
-
-        // find specifed team 
-        var teamToUpdate = lib.league.filter(function(sortedTeam) {
-            return sortedTeam.name === name;
-        })[0];
-        
-        tableState.override = false;
-        var dataPropNames = Object.getOwnPropertyNames(data);
-        var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
-        // update team data
-        teamToUpdatePropNames.forEach(function(teamProp) {
-            dataPropNames.forEach(function(dataProp) {
-                if (dataProp === teamProp) {
-                    teamToUpdate[dataProp] = data[dataProp];
-                // if prop provided is invalid, then throw error
-                } else if (teamToUpdatePropNames.indexOf(dataProp) === -1) {
-                    throw new Error('Incorrect team property format passed.');
+            // if team name not present throw error
+            if (!teamName) {
+                throw new Error('Team name does not exist.');
+            }
+            // find team object to update 
+            var teamToUpdate = lib.league.filter(function(sortedTeam) {
+                return sortedTeam.name === team.name;
+            })[0];
+            // set goal difference
+            teamToUpdate.goalDiff = calculateGoalDifference(team);
+            
+             // update team data
+                for (var prop in team) {
+                    if (teamToUpdate.hasOwnProperty(prop)) {
+                        teamToUpdate[prop] = team[prop];
+                    } else {
+                        throw new Error('Incorrect team property format passed.');
+                    }
                 }
-            });
+//            var dataPropNames = Object.getOwnPropertyNames(data);
+//            var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
+//            teamToUpdatePropNames.forEach(function(teamProp) {
+//                dataPropNames.forEach(function(dataProp) {
+//                    if (dataProp === teamProp) {
+//                        teamToUpdate[dataProp] = data[dataProp];
+//                    // if prop provided is invalid, then throw error
+//                    } else if (teamToUpdatePropNames.indexOf(dataProp) === -1) {
+//                        throw new Error('Incorrect team property format passed.');
+//                    }
+//                });
+//            }); 
         });
         
+        tableState.override = false;
         sortAndRenderCheck();
         return lib.league;
     };
