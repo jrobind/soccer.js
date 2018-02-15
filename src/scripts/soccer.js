@@ -15,8 +15,6 @@
         zones: false
     };
     
-    // default properties for updateTeam()
-//    var defaultTeamProps = ['name', 'played', 'won', 'drawn', 'lost', 'scored', 'conceded', 'goalDiff', 'points'];
 
     /*-------------Helper Functions------------*/
 
@@ -446,11 +444,11 @@
     };
 
     /**
-     * Takes an array of object(s)
+     * Takes an array of strings
      * Adds team(s) to the league array and auto-updates table if already rendered
      * Throws error if array is not passed, if team props are incorrect, or team name already exists 
      * Returns sorted league array
-     * @param {Array} team
+     * @param {Array} teams
      */
     lib.addTeam = function(teams) {
         arrayCheck(teams); 
@@ -472,6 +470,7 @@
                 goalDiff: 0,
                 points: 0
             }
+            
             lib.league.push(arr[index]);
         });
 
@@ -525,6 +524,8 @@
      * To-do: allow multiple teams to be updated at once
      */
     lib.updateTeam = function(data) {
+        arrayCheck(data);
+        
         data.forEach(function(team) {
             var teamName = checkName(team);
 
@@ -537,8 +538,8 @@
                 return sortedTeam.name === team.name;
             })[0];
             // set goal difference
-            team.scored || 0;
-            team.conceded || 0;
+            !team.scored ? team.scored = 0 : team.scored = team.scored;
+            !team.conceded ? team.conceded = 0 : team.conceded = team.conceded;
             teamToUpdate.goalDiff = team.scored - team.conceded;
             
              // update team data
