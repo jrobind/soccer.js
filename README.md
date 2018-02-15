@@ -1,7 +1,7 @@
-# :soccer: soccer.js:
+# :soccer: soccer.js
  
 
-soccer.js is a vanilla Javascript micro-library for building soccer league tables. It is lightweight and has no dependencies. It provides an easy way to update league tables with added reverse functionality, auto-sort, and an optional dropdown toggle. 
+__soccer.js__ is a vanilla Javascript micro-library for building soccer league tables. It is lightweight and has no dependencies. It provides an easy way to update league tables with added reverse functionality, auto-sort, and an optional dropdown toggle. 
 
 Built to account for every scenario in mind. The library sorts teams by points, then by goal difference, goals scored, and lastly, alphabetically. Works on mobile devices as well.
 
@@ -11,7 +11,7 @@ To see a league table in action take a look at the website: https://jrobind.gith
 
 ### Browser
 
-Load the files straight into your HTML from the ```src``` folder:
+Load the files straight into your HTML from the ```dist``` folder:
 
 ```html
 <link rel="stylesheet" href="soccer.min.css">
@@ -21,10 +21,10 @@ Alternatively, soccer.js is also compatible with AMD (RequireJS) - simply wrap y
 
 ```js
 require(['soccer'], function (soccer) {
-	// your code
+  // your code
 });
 ```
-Add a league table container:
+Make sure you add a league table container:
 
 ```html
 <div class="league-table"></div>
@@ -40,7 +40,7 @@ npm install soccer.js --save
 
 ## Usage
 
-To quickly set up a league, first add teams using the ```addTeam()``` method. It accepts an array of strings representing the names of the teams to be created. Team objects will be created with default values and sorted alphabetically. A league position will be assigned to each team object, once the league has been sorted. The method also returns a league array containing the sorted teams:
+To quickly set up a league, first add teams using the ```addTeam()``` method. It accepts an array of strings representing the names of the teams to be created. Team objects will be created with default values and sorted alphabetically. A league position will be assigned to each team object once the league has been sorted. The method also returns a league array containing the sorted teams:
 
 ```js
 soccer.addTeam(['Rohan Rovers', 'Elrond Athletic', 'Sauron Town', 'White Tree Park']);
@@ -79,7 +79,7 @@ The rendered league table comes with a reverse toggle built-in, so users can rev
 
 ### Update Team Stats
 
-Once the league table has been rendered you can easily update individual team stats by using the ```updateTeam()``` method. The method accepts an object (or multiple objects) containing team stats you wish to update. The object __must__ contain a ```name``` property with its value set equal to the name of the team to be updated. __You do not need to pass in a goal difference value - it is automatically calculated__.
+Once the league table has been rendered, you can easily update individual team stats by using the ```updateTeam()``` method. The method accepts an object (or multiple objects) containing team stats you wish to update. The object __must__ contain a ```name``` property with its value set equal to the name of the team to be updated. __You do not need to pass in a goal difference value - it is automatically calculated__.
 
 The table will auto-update and sort the teams. The method also returns an updated and sorted league array. You do not have to update all of the team stats - you can update a few if you wish:
 
@@ -94,7 +94,7 @@ soccer.updateTeam({
 
 ### Removing Teams
 
-To remove teams from the league table simply invoke the ```deleteTeam()``` method and pass in a string representing the name of the team you wish to delete. The method returns the updated league array and automatically re-sorts and renders the league table: 
+To remove teams from the league simply invoke the ```deleteTeam()``` method and pass in a string representing the name of the team you wish to delete. The method returns the updated league array and automatically re-sorts and renders the league table: 
 
 ```js
 soccer.deleteTeam('Rohan Rovers');
@@ -104,9 +104,9 @@ soccer.deleteTeam('Rohan Rovers');
 
 ### Override
 
-There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. For example, there may be a situation where two teams are tied for 1st place with equal points but instead of the winner being determined by goal difference, then goals scored etc, some countries may implement other rules to determine the winner such as the Spanish __head-to-head rule__. 
+There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points but instead of the winner being determined by goal difference, then goals scored etc, different systems to determine the winner such as the Spanish __head-to-head rule__ may be implemented. 
 
-With these edge cases in mind, teams can be manually swapped as a last resort by using the ```overide()``` method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and return an unsorted league array containing the override changes:
+With these edge cases in mind, teams can be manually swapped as a last resort by using the ```overide()``` method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and the league table will auto-update the changes. ```override()``` will return an unsorted league array containing the override changes:
 
 ```js
 soccer.override([1, 2]); // teams at positions 1 and 2 swapped
@@ -116,7 +116,7 @@ soccer.override([1, 2]); // teams at positions 1 and 2 swapped
 
 ### Sort
 
-If for any reason you need to re-sort the table, then the ```sort()``` method will do just that. The method will also return a sorted league array:
+If, for any reason you need to re-sort the table, then the ```sort()``` method will do just that. The method will also return a sorted league array:
 
 ```js
 soccer.sort();
