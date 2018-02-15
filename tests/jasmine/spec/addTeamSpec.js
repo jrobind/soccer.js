@@ -1,10 +1,23 @@
 describe('addTeam()', function() {
-    var team = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
-    var multipleTeams = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
-                         {name: 'Frodo City', gp: 10, w: 3, d: 2, l: 5, gs: 15, a: 14, gd: -1, pts: 13}];
-    var missingProps = [{name: 'Merry Argyle', gp: 15, w: 1}];
-    var incorrectprops = [{name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
-    var noArray = {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
+//    var team = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
+//    var multipleTeams = [{name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}, 
+//                         {name: 'Frodo City', gp: 10, w: 3, d: 2, l: 5, gs: 15, a: 14, gd: -1, pts: 13}];
+//    var missingProps = [{name: 'Merry Argyle', gp: 15, w: 1}];
+//    var incorrectprops = [{name: 'Merry Argyle', wrong: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11}];
+//    var noArray = {name: 'Merry Argyle', gp: 15, w: 1, d: 0, l: 4, gs: 5, a: 4, gd: -6, pts: 11};
+    var teamDefaults = {
+        name: 'Rohan Rovers', 
+        played: 0, 
+        won: 0, 
+        drawn: 0, 
+        lost: 0, 
+        scored: 0, 
+        conceded: 0, 
+        goalDiff: 0,
+        points: 0
+    };
+    
+    var multipleTeams
     
     beforeEach(function() {
         soccer.league.length = 0;
@@ -12,62 +25,59 @@ describe('addTeam()', function() {
     });
     
     
-    it('should add a team object', function() {
-        soccer.addTeam(team);
+    it('should create a team object', function() {
+        soccer.addTeam(['Rohan Rovers']);
         
         expect(soccer.league.length).toBe(1);
         expect(soccer.league[0]).toEqual(jasmine.any(Object));
-        expect(soccer.league[0]).toEqual(jasmine.objectContaining(team[0]));
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(teamDefaults));
     });
     
-    it('should add multiple team objects', function() {
-        soccer.addTeam(multipleTeams);
+    it('should create multiple team objects', function() {
+        soccer.addTeam(['Rohan Rovers', 'Frodo City', 'Bilbo Town']);
         
-        expect(soccer.league.length).toBe(2);
-        expect(soccer.league[0]).toEqual(jasmine.any(Object));
-        expect(soccer.league[1]).toEqual(jasmine.any(Object));
-        expect(soccer.league[0]).toEqual(jasmine.objectContaining(multipleTeams[0]));
-        expect(soccer.league[1]).toEqual(jasmine.objectContaining(multipleTeams[1]));
+        expect(soccer.league.length).toBe(3);
+        expect(soccer.league[0]).toEqual(jasmine.objectContaining(teamDefaults));
+        expect(soccer.league[1].name).toBe('Frodo City');
+        expect(soccer.league[2].name).toBe('Bilbo Town');
     });
     
-    it('should return league array containing team object', function() {
-        expect(soccer.addTeam(team)).toEqual(jasmine.any(Array));
-        soccer.league.length = 0;
-        expect(soccer.addTeam(team)[0]).toEqual(jasmine.objectContaining(team[0]));
+    it('should return league array containing team object(s)', function() {
+        var returnValue = soccer.addTeam(['Rohan Rovers']);
+        
+        expect(returnValue).toEqual(jasmine.any(Array));
+        expect(returnValue[0]).toEqual(jasmine.objectContaining(teamDefaults));
+        expect(returnValue.length).toBe(1);
     });
     
     it('should contain default team properties', function() {
-        soccer.addTeam(team);
+        soccer.addTeam(['Rohan Rovers']);
         
-        expect(soccer.league[0]).toEqual(jasmine.objectContaining(team[0]));
+        expect(soccer.league[0].name).toBe('Rohan Rovers');
+        expect(soccer.league[0].played).toBe(0);
+        expect(soccer.league[0].won).toBe(0);
+        expect(soccer.league[0].drawn).toBe(0);
+        expect(soccer.league[0].lost).toBe(0);
+        expect(soccer.league[0].scored).toBe(0);
+        expect(soccer.league[0].conceded).toBe(0);
+        expect(soccer.league[0].goalDiff).toBe(0);
+        expect(soccer.league[0].points).toBe(0);
         expect(soccer.league[0]).not.toEqual(jasmine.objectContaining({
             name: 'Bilbo Town'
         }));
     });
     
-    it('should throw Error if team object(s) not passed within an array', function() {
+    it('should throw Error if team names not passed within an array', function() {
         expect(function(){
-            soccer.addTeam(noArray);
+            soccer.addTeam('Rohan Rovers');
         }).toThrow(new Error('Invalid argument. Data must be passed within an array.'));  
     });
     
-    it('should throw Error if incorrect number of properties used', function() {
-        expect(function(){
-            soccer.addTeam(missingProps);
-        }).toThrow(new Error('Incorrect team property format passed.'));
-    });
-    
-    it('should throw Error if incorrect property is used', function() {
-        expect(function(){
-            soccer.addTeam(incorrectprops);
-        }).toThrow(new Error('Incorrect team property format passed.'));
-    });
-    
     it('should throw Error if team name is already in use', function() {
-        soccer.addTeam(team);
+        soccer.addTeam(['Rohan Rovers']);
         
         expect(function() {
-            soccer.addTeam(team);   
+            soccer.addTeam(['Rohan Rovers']);   
         }).toThrow(new Error('Team name already exists.'));
     });
     
