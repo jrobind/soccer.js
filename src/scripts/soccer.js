@@ -22,8 +22,8 @@
 
 
     function goalDiffCheck(a, b) {
-        if (a.gd !== b.gd) {
-            return b.gd - a.gd;
+        if (a.goalDiff !== b.goalDiff) {
+            return b.goalDiff - a.goalDiff;
         } else {
             // if goal difference is equal then sort by total goals scored
             return goalsScoredCheck(a, b);
@@ -32,8 +32,8 @@
 
 
     function goalsScoredCheck(a, b) {
-        if (a.gs !== b.gs) {
-            return b.gs - a.gs;
+        if (a.scored !== b.scored) {
+            return b.scored - a.scored;
         } else {
             // if total goals scored are equal, then sort alphabetically
             return alphabeticalCheck(a, b);
@@ -119,29 +119,6 @@
         });
 
         return Boolean(duplicate.length); 
-    }
-
-
-//    function validateProps(data) {
-//        var propsValid = true;
-//        var dataProps = Object.getOwnPropertyNames(data);
-//
-//        // check defaults against data props
-//        dataProps.forEach(function(prop) {
-//            if (defaultTeamProps.indexOf(prop) === -1) {
-//                propsValid = false;
-//            } 
-//        });
-//
-//        if (!propsValid || dataProps.length !== defaultTeamProps.length) {
-//            throw new Error('Incorrect team property format passed.');
-//        }
-//    }
-    
-    function calculateGoalDifference(team) {
-        team.goalDiff = team.scored - team.conceded;
-        
-        return team;
     }
     
     
@@ -514,8 +491,8 @@
         
         lib.league.sort(function(a, b) {
             // sort teams in descending order (by default) by points
-            if (a.pts !== b.pts) {
-                return b.pts - a.pts;
+            if (a.points !== b.points) {
+                return b.points - a.points;
             } else {
                 // if points are equal then sort by goal difference
                 return goalDiffCheck(a, b);
@@ -537,14 +514,14 @@
     };
     
     /**
-     * Takes a string for team name and an object for team values to be updated
+     * Takes an array of objects representing teams to update
+     * Object must contain correct team name
      * Updates individual team values
      * Updates can be applied to single or multiple team values
      * Throws error if team name already exists, or incorrect team property supplied 
      * Returns sorted league array
-     * @param {String} name
      * @param {Object} data
-     
+     *
      * To-do: allow multiple teams to be updated at once
      */
     lib.updateTeam = function(data) {
@@ -560,7 +537,9 @@
                 return sortedTeam.name === team.name;
             })[0];
             // set goal difference
-            teamToUpdate.goalDiff = calculateGoalDifference(team);
+            team.scored || 0;
+            team.conceded || 0;
+            teamToUpdate.goalDiff = team.scored - team.conceded;
             
              // update team data
                 for (var prop in team) {
@@ -570,18 +549,6 @@
                         throw new Error('Incorrect team property format passed.');
                     }
                 }
-//            var dataPropNames = Object.getOwnPropertyNames(data);
-//            var teamToUpdatePropNames = Object.getOwnPropertyNames(teamToUpdate);
-//            teamToUpdatePropNames.forEach(function(teamProp) {
-//                dataPropNames.forEach(function(dataProp) {
-//                    if (dataProp === teamProp) {
-//                        teamToUpdate[dataProp] = data[dataProp];
-//                    // if prop provided is invalid, then throw error
-//                    } else if (teamToUpdatePropNames.indexOf(dataProp) === -1) {
-//                        throw new Error('Incorrect team property format passed.');
-//                    }
-//                });
-//            }); 
         });
         
         tableState.override = false;
