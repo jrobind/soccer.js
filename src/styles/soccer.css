@@ -46,7 +46,7 @@
 .league-table td:nth-of-type(2) {
     font-weight: 600;
     padding-right: 15px;
-    max-width: 110px;
+    width: 105px;
     word-wrap: break-word;
     overflow: hidden;
 }
@@ -71,7 +71,7 @@
     font-size: 1.1em;
 }
 
-#reverseTable, .toggle div {
+#reverseTable, .toggle {
     cursor: pointer;
 }
 
@@ -91,7 +91,8 @@
     display: flex;
     margin: auto;
     height: 15px;
-    width: 50%;
+    width: 6%;
+    padding: 1px;
 }
 
 .toggle div {
