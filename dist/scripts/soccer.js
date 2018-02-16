@@ -191,7 +191,7 @@
         toggleTd.appendChild(toggleDiv);
         toggleRow.appendChild(toggleTd);
         // set toggle arrow click event listener
-        toggleArrow.addEventListener('click', dropdownToggle);
+        toggleDiv.addEventListener('click', dropdownToggle);
     }
 
 
