@@ -36,6 +36,9 @@ If you prefer package management, you can install soccer.js on npm:
 
 ```
 npm install soccer.js --save
+
+// to use
+var soccer = require('soccer.js').soccer;
 ```
 
 ## Usage
