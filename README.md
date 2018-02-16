@@ -79,17 +79,17 @@ The rendered league table comes with a reverse toggle built-in, so users can rev
 
 ### Update Team Stats
 
-Once the league table has been rendered, you can easily update individual team stats by using the ```updateTeam()``` method. The method accepts an object (or multiple objects) containing team stats you wish to update. The object __must__ contain a ```name``` property with its value set equal to the name of the team to be updated. __You do not need to pass in a goal difference value - it is automatically calculated__.
+Once the league table has been rendered, you can easily update individual team stats by using the ```updateTeam()``` method. The method accepts an array of objects containing team stats you wish to update. Objects __must__ contain a ```name``` property with it's value set equal to the name of the team to be updated. __You do not need to pass in a goal difference value - it is automatically calculated__.
 
 The table will auto-update and sort the teams. The method also returns an updated and sorted league array. You do not have to update all of the team stats - you can update a few if you wish:
 
 ```js
-soccer.updateTeam({
-    name: 'Rohan Rovers'
+soccer.updateTeam([{
+    name: 'Rohan Rovers',
     played: 16,
     won: 11,
     points: 34
-});
+}]);
 ```
 
 ### Removing Teams
@@ -132,7 +132,7 @@ The library is built so that it will work even if you choose not to render a lea
 
 ## Changing The Looks
 
-To alter the league table looks you can easily override the styles within ```soccer.css```. The most common style alteration will involve changing the league table caption color. By default it is red. To do this, change the ```background-color``` porperty in the ```.league-table caption ``` rule.
+To alter the league table looks you can easily override the styles within ```soccer.css```. The most common style alteration will involve changing the league table caption color. By default it is red. To do this, change the ```background-color``` property in the ```.league-table caption ``` rule.
 
 ## Contributing
 

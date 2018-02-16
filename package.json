@@ -1,5 +1,5 @@
 {
-  "name": "soccer",
+  "name": "soccer.js",
   "version": "1.0.0",
   "description": "A Javascript micro-library for building responsive soccer league tables",
   "main": "src/scripts/soccer.js",

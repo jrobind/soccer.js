@@ -449,7 +449,7 @@
     /**
      * Takes an array of strings
      * Adds team(s) to the league array and auto-updates table if already rendered
-     * Throws error if array is not passed, if team props are incorrect, or team name already exists 
+     * Throws error if array is not passed, or team name already exists 
      * Returns sorted league array
      * @param {Array} teams
      */
@@ -523,8 +523,6 @@
      * Throws error if team name already exists, or incorrect team property supplied 
      * Returns sorted league array
      * @param {Array} data
-     *
-     * To-do: allow multiple teams to be updated at once
      */
     lib.updateTeam = function(data) {
         arrayCheck(data);
@@ -597,7 +595,7 @@
      * league are made
      * Throws error if array is not passed
      * Returns unsorted league array
-     * @param {Array} positions
+     * @param {Array} toSwap
      */
     lib.override = function(toSwap) {
         tableState.override = true;
