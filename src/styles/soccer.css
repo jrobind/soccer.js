@@ -46,7 +46,9 @@
 .league-table td:nth-of-type(2) {
     font-weight: 600;
     padding-right: 15px;
-    max-width: 100px;
+    max-width: 110px;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 .league-table tfoot tr {
@@ -71,6 +73,11 @@
 
 #reverseTable, .toggle div {
     cursor: pointer;
+}
+
+#reverseTable span {
+    font-size: 0.7em;
+    color: #434343;
 }
 
 .hide-team {
