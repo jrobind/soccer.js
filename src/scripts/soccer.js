@@ -93,9 +93,9 @@
     function setArrowDirection() { 
         // set direction depending on reverse state
         if (tableState.reversed) {
-            return '&#9653';
+            return '&#9650';
         } else {
-            return '&#9663';    
+            return '&#9660';    
         }
     }
     
@@ -322,7 +322,10 @@
             if (headName === 'Pos') {
                 // set the reverse arrow direction
                 var arrowUniCode = setArrowDirection();
-                abbrEl.innerHTML = headName + arrowUniCode;
+                var arrowSpan = document.createElement('span');
+                arrowSpan.innerHTML = arrowUniCode;
+                abbrEl.innerText = headName;
+                abbrEl.appendChild(arrowSpan);
                 
                 // add id for reverse functionality
                 abbrEl.id = 'reverseTable';
@@ -519,7 +522,7 @@
      * Updates can be applied to single or multiple team values
      * Throws error if team name already exists, or incorrect team property supplied 
      * Returns sorted league array
-     * @param {Object} data
+     * @param {Array} data
      *
      * To-do: allow multiple teams to be updated at once
      */
