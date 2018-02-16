@@ -1,5 +1,6 @@
 .league-table {
     overflow-x: auto;
+    padding-bottom: 5px;
 }
 
 .league-table table {
@@ -30,7 +31,7 @@
 }
 
 .league-table td, .league-table th {
-    padding: 8px 6px;
+    padding: 8px 8px;
 }
 
 .league-table tr:nth-of-type(even) {
@@ -39,13 +40,13 @@
 
 .league-table td:nth-last-of-type(-n+8) {
     text-align: center;
-    min-width: 20px
+    min-width: 20px;
 }
 
 .league-table td:nth-of-type(2) {
     font-weight: 600;
     padding-right: 15px;
-    max-width: 100px
+    max-width: 100px;
 }
 
 .league-table tfoot tr {
@@ -90,19 +91,19 @@
     margin: auto;
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
 }
 
 .toggle-arrow-default {
-    border-top: 9px solid #434343;
+    border-top: 11px solid #434343;
     -webkit-transition: all 0.3s ease-in;
     -o-transition: all 0.3s ease-in;
     transition: all 0.3s ease-in;
 }
 
 .toggle-arrow-collapse {
-    border-bottom: 9px solid #434343;
+    border-bottom: 11px solid #434343;
     -webkit-transition: all 0.3s ease-in;
     -o-transition: all 0.3s ease-in;
     transition: all 0.3s ease-in;
@@ -124,9 +125,9 @@
     color: #008000;
 }
 
-@media screen and (max-width: 455px) {
+@media screen and (max-width: 500px) {
     .league-table td, .league-table th {
-        padding: 6px 2px;
+        padding: 6px 3px;
     }
     
     .league-table td:nth-of-type(2) {
@@ -135,5 +136,15 @@
 
     .league-table tr {
         font-size: 13.5px;
+    }
+}
+
+@media screen and (max-width: 405px) {
+    .league-table td, .league-table th {
+        padding: 6px 2px;
+    }
+    
+    .league-table tr {
+        font-size: 13px;
     }
 }
