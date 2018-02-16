@@ -104,9 +104,9 @@ soccer.deleteTeam('Rohan Rovers');
 
 ### Override
 
-There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points but instead of the winner being determined by goal difference, then goals scored etc, different systems to determine the winner such as the Spanish __head-to-head rule__ may be implemented. 
+There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points but instead of the winner being determined by goal difference, then goals scored etc, different systems to determine the winner such as the Spanish head-to-head rule may be implemented. 
 
-With these edge cases in mind, teams can be manually swapped as a last resort by using the ```overide()``` method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and the league table will auto-update the changes. ```override()``` will return an unsorted league array containing the override changes:
+With these edge cases in mind, teams can be manually swapped as a last resort by using the ```overide()``` method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and the league table will auto-update the changes. ```override()``` will return an unsorted league array containing the changes:
 
 ```js
 soccer.override([1, 2]); // teams at positions 1 and 2 swapped
