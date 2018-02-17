@@ -36,8 +36,10 @@ If you prefer package management, you can install soccer.js on npm:
 
 ```
 npm install soccer.js --save
+```
+To use:
 
-// to use
+```js
 var soccer = require('soccer.js').soccer;
 ```
 
@@ -66,7 +68,7 @@ Default team objects will look something like this:
 }
 ```
 
-Once all your teams are added, render a league table using the ```renderLeague()``` method. By default, the table will render without a dropdown or zones applied. To alter this, you can pass in an optional object allowing you to configure the table. The configuration object consists of 3 properties:
+Once all your teams are added, render a league table using the ```renderLeague()``` method. By default, the table will render __without__ a dropdown or zones applied. To alter this, you can pass in an optional object allowing you to configure the table. The configuration object consists of 3 properties:
 
 ```js
 soccer.renderLeague({
@@ -107,7 +109,7 @@ soccer.deleteTeam('Rohan Rovers');
 
 ### Override
 
-There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points but instead of the winner being determined by goal difference, then goals scored etc, different systems to determine the winner such as the Spanish head-to-head rule may be implemented. 
+There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points, but instead of the winner being determined by goal difference, then goals scored etc, different rule systems (such as the Spanish head-to-head rule) may be implemented. 
 
 With these edge cases in mind, teams can be manually swapped as a last resort by using the ```overide()``` method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and the league table will auto-update the changes. ```override()``` will return an unsorted league array containing the changes:
 
@@ -115,7 +117,7 @@ With these edge cases in mind, teams can be manually swapped as a last resort by
 soccer.override([1, 2]); // teams at positions 1 and 2 swapped
 ```
 
-*note that any changes made using the `overide()` method will remain in effect __as long as no other library methods are called__. Calling other methods will revert any changes made by `override()`. To revert changes back again simply re-call the method. 
+Note that any changes made using the `overide()` method will remain in effect __as long as no other library methods are called__. Calling other methods will revert any changes made by `override()`. To revert changes back again simply re-call the method. 
 
 ### Sort
 
@@ -141,6 +143,6 @@ To alter the league table looks you can easily override the styles within ```soc
 
 Please let me know of any issues/feature requests. Pull-requests and all contributions are greatly appreciated. 
 
-## Licence
+## License
 
 [MIT License](https://opensource.org/licenses/MIT)
