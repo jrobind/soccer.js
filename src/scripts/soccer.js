@@ -256,17 +256,6 @@
     }
 
 
-    function formatGoalDiff(team) {
-        var plusFormat = '+' + team.goalDiff;
-        // prepend correct '+' or '-' symbols to goal difference 
-        if (team.goalDiff > 0) {
-            team.goalDiff = team.goalDiff.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
-        } else if (team.goalDiff < 0) {
-            team.goalDiff = team.goalDiff.toString().replace(/\s+/g, '');
-        }
-    }
-
-
     function addGoalDiffClasses(teamRow) {    
         var tds = nodeLikeToArray(teamRow.cells);
         var gdSpan = tds[8].firstChild;
@@ -351,9 +340,8 @@
         // iterate over each team object and create a table row with relevant team data 
         league.forEach(function(team) {
             var dataArr = [];
-            formatGoalDiff(team);
-
             var teamRow = document.createElement('tr');
+            
             // set team position as data attr on table row
             teamRow.setAttribute('data', team.position);
             tableBody.appendChild(teamRow);
