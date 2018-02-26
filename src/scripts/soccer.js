@@ -257,12 +257,12 @@
 
 
     function formatGoalDiff(team) {
-        var plusFormat = '+' + team.gd;
+        var plusFormat = '+' + team.goalDiff;
         // prepend correct '+' or '-' symbols to goal difference 
-        if (team.gd > 0) {
-            team.gd = team.gd.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
-        } else if (team.gd < 0) {
-            team.gd = team.gd.toString().replace(/\s+/g, '');
+        if (team.goalDiff > 0) {
+            team.goalDiff = team.goalDiff.toString().replace(/\s+/g, '').replace(/^\d+/, plusFormat);
+        } else if (team.goalDiff < 0) {
+            team.goalDiff = team.goalDiff.toString().replace(/\s+/g, '');
         }
     }
 
