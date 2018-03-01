@@ -31,7 +31,16 @@
 }
 
 .league-table td, .league-table th {
-    padding: 8px 8px;
+    padding: 4px 9px;
+    font-size: 14.5px;
+}
+
+.league-table td {
+    height: 33px;
+}
+
+.league-table th {
+    height: 25px;
 }
 
 .league-table tr:nth-of-type(even) {
@@ -41,12 +50,13 @@
 .league-table td:nth-last-of-type(-n+8) {
     text-align: center;
     min-width: 20px;
+    height: 25px;
 }
 
 .league-table td:nth-of-type(2) {
     font-weight: 600;
-    padding-right: 15px;
-    width: 105px;
+    padding-right: 20px;
+    width: 110px;
     word-wrap: break-word;
     overflow: hidden;
 }
@@ -59,8 +69,6 @@
 
 .league-table tr {
     border-bottom: 0.6px solid #BDBDBD;
-    font-size: 14.5px;
-    line-height: 16px;
 }
 
 .league-table caption {
@@ -133,26 +141,28 @@
     color: #008000;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 545px) {
     .league-table td, .league-table th {
-        padding: 6px 3px;
+        padding: 4px 3px;
+        font-size: 13.5px;
     }
     
     .league-table td:nth-of-type(2) {
         padding-right: 10px;
     }
-
-    .league-table tr {
-        font-size: 13.5px;
-    }
 }
 
-@media screen and (max-width: 405px) {
+@media screen and (max-width: 425px) {
     .league-table td, .league-table th {
-        padding: 6px 2px;
-    }
-    
-    .league-table tr {
+        padding: 4px 2px;
         font-size: 13px;
     }
+    
+    .league-table tbody td:first-child, .league-table thead th:first-child{
+        padding-left: 8px;
+    }
+    
+    .league-table tbody td:last-child, .league-table thead th:last-child{
+        padding-right: 8px;
+    }   
 }
