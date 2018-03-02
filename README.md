@@ -5,7 +5,7 @@ __soccer.js__ is a vanilla Javascript micro-library for building soccer league t
 
 Built to account for every scenario in mind. The library sorts teams by points, then by goal difference, goals scored, and lastly, alphabetically. Works on mobile devices as well.
 
-To see a league table in action take a look at the website: https://jrobind.github.io/soccer-js/
+To see a league table in action take a look at the website: https://jrobind.github.io/soccer.js/
 
 ## Install
 
