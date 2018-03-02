@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>soccer.js</title>
+    <link rel="icon" href="./ball.favicon.png">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="../dist/styles/soccer.min.css">
+    <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</head>
+    <body>
+        <!--fork me ribbon-->
+        <div class="ribbon">
+            <a href="https://github.com/jrobind/soccer.js">Fork me on GitHub</a>
+        </div>
+        
+        <header>
+            <h1><i class="fas fa-futbol soccer-ball"></i> soccer.js</h1>
+            <h2 class="header-middle" >The easy way to build responsive soccer league tables</h2>
+            <h2 class="header-last">Lightweight. No dependencies</h2>
+        </header>
+        
+            <div class="demo">
+                <p class="intro">
+                    <strong>soccer.js</strong> provides an easy way to build and update league tables with added reverse functionality, auto-sort, and an optional dropdown toggle. Built to account for every scenario in mind. The library sorts teams by points, then by goal difference, goals scored, and lastly, alphabetically.
+                </p>
+                <!--league table-->
+                <div class="league-container">
+                    <div class="league-table"></div>
+                </div> 
+            </div>
+        
+        <main>
+            <!--install section-->
+            <h1 id="install">Install</h1>
+            <hr class="hr-sub">
+            <h2>Browser</h2>
+            <p>
+                Load the files straight into your HTML:
+            </p>
+            <pre>
+                <code class="html">
+ &lt;link rel="stylesheet" href="soccer.min.css"&gt;&lt;/link&gt;
+ &lt;script src="soccer.min.js"&gt;&lt;/script&gt;
+                </code>
+            </pre>
+            <p>
+                Alternatively, soccer.js is also compatible with <strong>AMD (RequireJS)</strong> - simply wrap your code in the following block:
+            </p>
+            <pre>
+                <code class="javascript">
+ require(['soccer'], function (soccer) {
+ // your code
+ });
+                </code>
+            </pre>
+            
+            <h2>npm</h2>
+            <p>
+                If you prefer package management, you can install soccer.js on npm:
+            </p>
+            <pre>
+                <code>
+ npm install soccer.js --save
+                </code>
+            </pre>
+            <p class="to-use">
+                To use:
+            </p>
+            <pre>
+                <code>
+ var soccer = require('soccer.js').soccer;               
+                </code>
+            </pre>
+            <!--usage section-->
+            <h1 id="usage">Usage</h1>
+            <hr>
+            <p>
+                To quickly set up a league, first add teams using the <code class="single-code single">addTeam()</code> method. It accepts an array of strings representing the names of the teams to be created. Team objects will be created with default values and sorted alphabetically. A league position will be assigned to each team object, once the league has been sorted. The method also returns a league array containing the sorted teams:
+            </p>
+            <pre>
+                <code class="javascript">
+soccer.addTeam(['Rohan Rovers', 'Elrond Athletic', 'Sauron Town', 'White Tree Park']);
+                </code>
+            </pre>
+            <p>
+                Default team objects will look something like this:
+            </p>
+            <pre>
+                <code class="javascript">
+  {
+    name: 'Rohan Rovers',
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+    scored: 0,
+    conceded: 0,
+    goalDiff: 0,
+    points: 0,
+    position: 1 // represents league position
+  }
+                </code>
+            </pre>
+            <p>
+                Once all your teams are added, render a league table using the <code class="single-code">renderLeague()</code> method. By default, the table will render <strong>without</strong> a dropdown or zones applied. To alter this, you can pass in an optional object allowing you to configure the table. The configuration object consists of 3 properties:
+            </p>
+            <pre>
+                <code class="javascript">
+ soccer.renderLeague({
+     leagueName: 'Middle Earth League 1', // name of your league
+     dropdown: 5, // collapse table from 5th place and render toggle to table
+     zones: [1, 8] // set a promotion and relegation zone
+ });
+                </code>
+            </pre>
+            <p>
+                The rendered league table comes with a reverse toggle built-in, so users can reverse the league table making it easier to view leagues containing lots of teams. To reverse a league table simply click the <strong>'Pos'</strong> column header.
+            </p>
+            <!--updating table section-->
+            <h1 id="updateTable">Updating The Table</h1>
+            <hr class="hr-sub">
+            <h2>Update Team Stats</h2>
+            <p>
+                Once the league table has been rendered, you can easily update individual team stats by using the <code class="single-code">updateTeam()</code> method. The method accepts an array of objects containing team stats you wish to update. Objects must contain a <code class="single-code">name</code> property with it's value set equal to the name of the team to be updated. <strong>You do not need to pass in a goal difference value - it is automatically calculated</strong>.
+            </p>
+            <p>
+                The table will auto-update and sort the teams. The method also returns an updated and sorted league array. You do not have to update all of the team stats - you can update a few if you wish:
+            </p>
+            <pre>
+                <code class="javascript">
+ soccer.updateTeam([{
+     name: 'Rohan Rovers',
+     played: 16,
+     won: 11,
+     points: 34
+ }]);
+                </code>
+            </pre>
+            
+            <h2>Removing Teams</h2>
+            <p>
+                To remove teams from the league table simply invoke the <code class="single-code">deleteTeam()</code> method and pass in a string representing the name of the team you wish to delete. The method returns the updated league array and automatically re-sorts and renders the league table:  
+            </p>
+            <pre>
+                <code class="javascript">
+ soccer.deleteTeam('Rohan Rovers');       
+                </code>
+            </pre>
+            
+            <h2>Override</h2>
+            <p>
+                There are edge cases where a manual position override in the league may be necessary. For instance, other countries may apply different rules when two teams are tied with equal points for important promotion, winning, and relegation positions. There may be a situation where two teams are tied for 1st place with equal points, but instead of the winner being determined by goal difference, then goals scored etc, different rule systems (such as the Spanish head-to-head rule) may be implemented.   
+            </p>
+            <p>
+                With these edge cases in mind, teams can be manually swapped as a last resort by using the <code class="single-code">override()</code> method. The method accepts an array containing the positions of the two teams you wish to swap. This mechanism will ignore any default sorting and the league table will auto-update the changes. <code class="single-code">override()</code> will return an unsorted league array containing the override changes:
+            </p>
+            <pre>
+                <code class="javascript">
+ soccer.override([1, 2]); // teams at positions 1 and 2 swapped       
+                </code>
+            </pre>
+            <p>
+                Note that any changes made using the <code class="single-code">override()</code> method will remain in effect <strong>as long as no other library methods are called</strong>. Calling other methods will revert any changes made by <code class="single-code">override()</code>. To revert changes back again simply re-call the method. 
+            </p>
+            
+            <h2 class="sort">Sort</h2>
+            <p>
+                If, for any reason you need to re-sort the table, then the <code class="single-code">sort()</code> method will do just that. The method will also return a sorted league array: 
+            </p>
+            <pre>
+                <code class="javascript">
+ soccer.sort();      
+                </code>
+            </pre>
+            <!--without a table section-->
+            <h1 id="noTable">Usage Without A Table</h1>
+            <hr>
+            <p>
+                The library is built so that it will work even if you choose not to render a league table and wish instead to just work with the league array itself. This may be useful for those who are looking to build their own unique tables. In this case, to prevent any potential errors you need to <strong>remove</strong> any league table container divs from your HTML (if present):  
+            </p>
+            <pre>
+                <code class="html">
+ &lt;div class="league-table"&gt;&lt;/div&gt;  &lt;!--remove--&gt;
+                </code>
+            </pre>
+            <!--changing the looks section-->
+            <h1 id="changeLooks">Changing the Looks</h1>
+            <hr>
+            <p>
+                To alter the league table looks you can easily override the styles within <code class="single-code">soccer.css</code>. The most common style alteration will involve changing the league table caption color. By default it is red. To do this, change the <code class="single-code">background-color</code> property in the <code class="single-code">.league-table caption</code> rule.
+            </p>
+            <!--contributing section-->
+            <h1 id="contribute">Contributing</h1>
+            <hr>
+            <p>
+                Please let me know of any issues/feature requests. Pull-requests and all contributions are greatly appreciated.   
+            </p>
+        </main>
+        <footer>
+            <span>Made by <a href="https://github.com/jrobind">James Robinson</a> under <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+        </footer>
+        
+        <script type="text/javascript" src="../dist/scripts/soccer.min.js"></script>
+        <script type="text/javascript" src="./app.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </body>
