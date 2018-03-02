@@ -10,7 +10,7 @@
 
 .league-table thead tr {
     background-color: #F4F4F4;
-    border-bottom: 0.6px solid #BDBDBD;
+    border-bottom: 1px solid #BDBDBD;
 }
 
 .league-table tbody td:last-child, .league-table thead th:last-child{
@@ -68,7 +68,7 @@
 }
 
 .league-table tr {
-    border-bottom: 0.6px solid #BDBDBD;
+    border-bottom: 1px solid #BDBDBD;
 }
 
 .league-table caption {
