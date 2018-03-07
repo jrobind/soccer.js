@@ -36,7 +36,7 @@
 }
 
 .league-table td {
-    height: 33px;
+    height: 36px;
 }
 
 .league-table th {
@@ -50,7 +50,7 @@
 .league-table td:nth-last-of-type(-n+8) {
     text-align: center;
     min-width: 20px;
-    height: 25px;
+    height: 27px;
 }
 
 .league-table td:nth-of-type(2) {
@@ -100,31 +100,31 @@
     display: -ms-flexbox;
     display: flex;
     margin: auto;
-    height: 15px;
-    width: 6%;
-    padding: 1px;
+    width: 7%;
 }
 
 .toggle div {
     margin: auto;
-    width: 0;
-    height: 0;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-}
-
-.toggle-arrow-default {
-    border-top: 11px solid #434343;
-    -webkit-transition: all 0.3s ease-in;
-    -o-transition: all 0.3s ease-in;
-    transition: all 0.3s ease-in;
+    border: solid rgba(0, 0, 0, 0.8);
+    border-right: 4px;
+    border-bottom: 4px;
+    padding: 5px;
 }
 
 .toggle-arrow-collapse {
-    border-bottom: 11px solid #434343;
-    -webkit-transition: all 0.3s ease-in;
-    -o-transition: all 0.3s ease-in;
-    transition: all 0.3s ease-in;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.toggle-arrow-default {
+    transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
 }
 
 #zone {
