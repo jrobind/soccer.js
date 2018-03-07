@@ -21,7 +21,7 @@ soccer.updateTeam([{
         points: 6
         },
     {
-        name: 'Aragron Wanderers',
+        name: 'Aragorn Wanderers',
         played: 11,
         won: 10,
         drawn: 1,
