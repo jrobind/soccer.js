@@ -1,4 +1,4 @@
-soccer.addTeam(['Gandalf Academical', 'Frodo City', 'Aragron Wanderers', 'Bilbo United', 'Gimli Albion', 'Sauron Town', 'Merry Argyle', 'Elrond Athletic', 'Rohan Rovers', 'White Tree Park']);
+soccer.addTeam(['Gandalf Academical', 'Frodo City', 'Aragorn Wanderers', 'Bilbo United', 'Gimli Albion', 'Sauron Town', 'Merry Argyle', 'Elrond Athletic', 'Rohan Rovers', 'White Tree Park']);
     
 soccer.updateTeam([{
         name: 'Gandalf Academical',
