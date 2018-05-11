@@ -96,33 +96,15 @@
 }
 
 .toggle {
-    margin-left: 49%;
-    margin-bottom: 7px;
+    margin: 6px auto 0 auto;
+    width: 25px;
 }
 
 .toggle div {
-    position: absolute;
-    border: solid rgba(0, 0, 0, 0.8);
-    border-width: 0 3px 3px 0;
-    display: block;
-    padding: 5px;
-    -webkit-transition: -webkit-transform 0.3s ease-out;
-    transition: -webkit-transform 0.3s ease-out;
-    -o-transition: transform 0.3s ease-out;
-    transition: transform 0.3s ease-out;
-    transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
-}
-
-.toggle-arrow-collapse {
-    -ms-transform: rotate(-135deg);
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-}
-
-.toggle-arrow-default {
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
+    width: 25px;
+    height: 2px;
+    background-color: #434343;
+    margin: 4px 0;
 }
 
 #zone {
