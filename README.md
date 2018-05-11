@@ -1,7 +1,7 @@
 # :soccer: soccer.js
  
 
-__soccer.js__ is a vanilla Javascript micro-library for building soccer league tables. It is lightweight and has no dependencies. It provides an easy way to update league tables with added reverse functionality, auto-sort, and an optional dropdown toggle. 
+__soccer.js__ is a vanilla JavaScript micro-library for building soccer league tables. It is lightweight and has no dependencies. It provides an easy way to update league tables with added reverse functionality, auto-sort, and an optional dropdown toggle. 
 
 Built to account for every scenario in mind. The library sorts teams by points, then by goal difference, goals scored, and lastly, alphabetically. Works on mobile devices as well.
 

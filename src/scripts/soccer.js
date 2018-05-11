@@ -6,6 +6,7 @@
     
     // api object 
     var lib = {};
+    // league store
     lib.league = [];
     
     // defaults for renderLeague()
@@ -161,13 +162,12 @@
     }
     
     
-    function setToggleArrowDirection(toggleArrow, data) {
-        if (tableState.toggleState === 'show' && !data) { // 'data' represents table creation
-            toggleArrow.classList.remove('toggle-arrow-default');
-            toggleArrow.classList.add('toggle-arrow-collapse');
-        } else {
-            toggleArrow.classList.add('toggle-arrow-default');
+    function createToggleIcon(iconContainer) {
+        // create 3 divs for icon toggle
+        for (var i = 0; i < 3; i++) {
+            iconContainer.appendChild(document.createElement('div'));
         }
+        return iconContainer;
     }
 
 
@@ -179,19 +179,17 @@
         var toggleTd = document.createElement('td');
         // td to span all table columns
         toggleTd.setAttribute('colspan', '10');
-        var toggleDiv = document.createElement('div');
+        var toggleContainer = document.createElement('div');
         // set toggle div class
-        toggleDiv.setAttribute('class', 'toggle');
-
-        var toggleArrow = document.createElement('div');
+        toggleContainer.setAttribute('class', 'toggle');
         
-        setToggleArrowDirection(toggleArrow, data);
+        createToggleIcon(toggleContainer);
         
-        toggleDiv.appendChild(toggleArrow);
-        toggleTd.appendChild(toggleDiv);
+        toggleTd.appendChild(toggleContainer);
         toggleRow.appendChild(toggleTd);
+        
         // set toggle arrow click event listener
-        toggleDiv.addEventListener('click', dropdownToggle);
+        toggleContainer.addEventListener('click', dropdownToggle);
     }
 
 
@@ -221,20 +219,9 @@
 
 
     function dropdownToggle() {
-        var toggleArrow = document.querySelector('.toggle div');
         var hidden = document.querySelectorAll('.hide-team');
         // show or hide teams depending on whether we are currently hiding teams
-        if (hidden.length) {
-            showTeams();
-            // change arrow direction
-            toggleArrow.classList.remove('toggle-arrow-default');
-            toggleArrow.classList.add('toggle-arrow-collapse');
-        } else {
-            hideTeams();
-            // change arrow direction
-            toggleArrow.classList.remove('toggle-arrow-collapse');
-            toggleArrow.classList.add('toggle-arrow-default');
-        }
+        hidden.length ? showTeams() : hideTeams();
     }
 
 
@@ -286,8 +273,10 @@
         var container = document.querySelector('.league-table');
         var leagueTable = document.createElement('table');
         var leagueCaption = document.createElement('caption');
+        
         // set caption text equal to league name provided
         leagueCaption.innerText = leagueDefaults.leagueName;
+        
         container.appendChild(leagueTable);
         leagueTable.appendChild(leagueCaption);
         
@@ -635,9 +624,11 @@
     
     // support for AMD
     if (typeof root.define === 'function' && define.amd) {
+        
         root.define('soccer',[], function () {
             return lib;
         });
+        
     } else {
         // add 'soccer' to the global object
         root.soccer = lib;           
