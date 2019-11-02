@@ -17,6 +17,8 @@ Load the files straight into your HTML from the ```dist``` folder:
 <link rel="stylesheet" href="soccer.min.css">
 <script src="soccer.min.js"></script>
 ```
+An example html document is included in the distribution as an example. 
+
 Alternatively, soccer.js is also compatible with AMD (RequireJS) - simply wrap your code in the following block:
 
 ```js
@@ -27,7 +29,9 @@ require(['soccer'], function (soccer) {
 Make sure you add a league table container:
 
 ```html
-<div class="league-table"></div>
+  <div class="league-container">
+    <div class="league-table"></div>
+  </div>
 ```
 
 ### npm
@@ -73,8 +77,8 @@ Once all your teams are added, render a league table using the ```renderLeague()
 ```js
 soccer.renderLeague({
     leagueName: 'Middle Earth League 1', // name of your league
-    dropdown: 5, // collapse table from 5th place and render toggle to table
-    zones: [1, 8] // set a promotion and relegation zone
+    dropdown: 3, // collapse table from 3rd place and render toggle to table
+    zones: [1, 4] // set a promotion and relegation zone
 });
 ```
 
