@@ -17,7 +17,6 @@ Load the files straight into your HTML from the ```dist``` folder:
 <link rel="stylesheet" href="soccer.min.css">
 <script src="soccer.min.js"></script>
 ```
-An example html document is included in the distribution as an example. 
 
 Alternatively, soccer.js is also compatible with AMD (RequireJS) - simply wrap your code in the following block:
 
@@ -29,7 +28,6 @@ require(['soccer'], function (soccer) {
 Make sure you add a league table container:
 
 ```html
-  <div class="league-container">
     <div class="league-table"></div>
   </div>
 ```
