@@ -27,7 +27,7 @@ require(['soccer'], function (soccer) {
 Make sure you add a league table container:
 
 ```html
-    <div class="league-table"></div>
+<div class="league-table"></div>
 ```
 
 ### npm
