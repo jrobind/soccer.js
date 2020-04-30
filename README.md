@@ -73,8 +73,8 @@ Once all your teams are added, render a league table using the ```renderLeague()
 ```js
 soccer.renderLeague({
     leagueName: 'Middle Earth League 1', // name of your league
-    dropdown: 5, // collapse table from 5th place and render toggle to table
-    zones: [1, 8] // set a promotion and relegation zone
+    dropdown: 3, // collapse table from 3rd place and render toggle to table
+    zones: [1, 4] // set a promotion and relegation zone
 });
 ```
 
