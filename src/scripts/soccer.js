@@ -46,8 +46,7 @@
 
 
     function nodeLikeToArray(nodeLike) {
-        var arr = [].slice.apply(nodeLike);
-        return arr;
+        return [].slice.apply(nodeLike);
     } 
 
 
@@ -82,11 +81,12 @@
 
 
     function reverseZones() {
-        var zones = document.querySelectorAll('#zone');
+        var zones = document.querySelectorAll('.zone');
         var zonesArr = nodeLikeToArray(zones);
         // set id for zones
         zonesArr.forEach(function(zone) {
-            zone.id = 'zoneReverse';
+            zone.classList.remove('zone');
+            zone.classList.add('zone-reverse');
         });
     }
 
@@ -380,7 +380,7 @@
                 var position = Number(teamRow.getAttribute('data'));
                 
                 if (position === zone) {
-                    teamRow.id = 'zone';
+                    teamRow.classList.add('zone');
                 }    
             });
         });

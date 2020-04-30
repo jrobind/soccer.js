@@ -1,6 +1,6 @@
 {
   "name": "soccer.js",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "A Javascript micro-library for building responsive soccer league tables",
   "main": "src/scripts/soccer.js",
   "repository": {
@@ -17,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/JrobinWebDev/soccer.js/issues"
   },
-  "homepage": "https://github.com/JrobinWebDev/soccer.js#readme"
+  "homepage": "https://github.com/JrobinWebDev/soccer.js#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2"
+  },
+  "dependencies": {}
 }

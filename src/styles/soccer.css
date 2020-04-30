@@ -107,11 +107,11 @@
     margin: 4px 0;
 }
 
-#zone {
+.league-table .zone {
     border-bottom: 2px solid #909090;
 }
 
-#zoneReverse {
+.league-table .zone-reverse {
     border-top:  2px solid #909090;
 }
 
